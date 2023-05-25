@@ -40,17 +40,16 @@
                                                 <label class="form-check-label" for="checkAll"></label>
                                             </div>
                                         </th>
-                                        <th>Invoice ID</th>
+                                        <th>Client Name</th>
                                         <th>Date</th>
-                                        <th>Billing Name</th>
+                                        <th>Payment</th>
                                         <th>Amount</th>
-                                        <th>Status</th>
                                         <th style="width: 120px;">Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @isset($invoices)
-                                        @foreach($invoices as $invoice)
+                                    @isset($refunds)
+                                        @foreach($refunds as $refund)
                                             <tr>
                                                 <td>
                                                     <div class="form-check font-size-16">
@@ -59,21 +58,14 @@
                                                     </div>
                                                 </td>
 
-                                                <td>{{ $invoice->number }}</td>
+                                                <td>{{ $refund->client->name ?? '' }}</td>
                                                 <td>
-                                                   {{ $invoice->date }}
+                                                    {{ $refund->date }}
                                                 </td>
-                                                <td>{{ $invoice->billing_name }}</td>
+                                                <td>{{ $refund->payment }}</td>
 
                                                 <td>
-                                                    ${{ $invoice->total_amount }}
-                                                </td>
-                                                <td>
-                                                    @if($invoice->status == 1)
-                                                        <div class="badge badge-soft-success font-size-12">Paid</div>
-                                                    @else
-                                                        <div class="badge badge-soft-warning font-size-12">Pending</div>
-                                                    @endif
+                                                    ${{ $refund->amount }}
                                                 </td>
 
 
@@ -83,8 +75,8 @@
                                                             <i class="uil uil-ellipsis-h"></i>
                                                         </button>
                                                         <ul class="dropdown-menu dropdown-menu-end">
-                                                            <li><a class="dropdown-item" href="/invoice/edit/{{ $invoice->id }}">Edit</a></li>
-                                                            <li><a class="dropdown-item" href="/invoice/delete/{{ $invoice->id }}">Delete</a></li>
+                                                            <li><a class="dropdown-item" href="/refund/edit/{{ $refund->id }}">Edit</a></li>
+                                                            <li><a class="dropdown-item" href="/refund/delete/{{ $refund->id }}">Delete</a></li>
                                                         </ul>
                                                     </div>
                                                 </td>
@@ -146,7 +138,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body p-4">
-                            <form action="{{ route('invoice.create') }}" method="POST">
+                            <form action="{{ route('refund.create') }}" method="POST">
                                 @method('POST')
                                 @csrf
                                 <div>
@@ -214,18 +206,10 @@
                                             <div class="row">
                                                 <div class="col-lg-6">
 
-                                                    <div class="mb-3">
-                                                        <label for="billing_name" class="form-label">Billing Name </label>
-                                                        <input type="text" class="form-control" name="billing_name" id="billing_name">
-                                                    </div>
 
                                                     <div class="mb-3">
-                                                        <label for="total_amount" class="form-label">Amount #</label>
-                                                        <input type="text" class="form-control" name="total_amount" id="total_amount">
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label for="instalment" class="form-label">Instalment</label>
-                                                        <input type="text" class="form-control" name="instalment" id="instalment">
+                                                        <label for="amount" class="form-label">Amount #</label>
+                                                        <input type="text" class="form-control" name="amount" id="amount">
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6">
@@ -243,15 +227,6 @@
                                                         <input type="date" class="form-control" name="date" id="date">
                                                     </div>
 
-
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Payment Status :</label>
-                                                        <select name="status" class="form-select">
-                                                            <option selected>Select Payment Status</option>
-                                                            <option value="1">Paid</option>
-                                                            <option value="0">Pending</option>
-                                                        </select>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

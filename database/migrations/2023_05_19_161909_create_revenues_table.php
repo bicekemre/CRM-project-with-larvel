@@ -16,15 +16,15 @@ return new class extends Migration
     {
         Schema::create('revenues', function (Blueprint $table) {
             $table->id();
-            $table->double('amount');
-            $table->foreignIdFor(Client::class,'id_client');
-            $table->foreignIdFor(Invoice::class,'id_invoice');
-            $table->foreignIdFor(Service::class,'is_service');
-            $table->boolean('payment_status');
-            $table->string('desc');
-            $table->string('payment');
-            $table->tinyInteger('installment');
-            $table->date('payment_date');
+            $table->double('amount')->nullable();
+            $table->foreignIdFor(Client::class,'id_client')->nullable();
+            $table->foreignIdFor(Invoice::class,'id_invoice')->nullable();
+            $table->foreignIdFor(Service::class,'id_service')->nullable();
+            $table->boolean('payment_status')->nullable();
+            $table->string('desc')->nullable();
+            $table->string('payment')->nullable();
+            $table->tinyInteger('installment')->nullable();
+            $table->date('payment_date')->nullable();
             $table->timestamps();
         });
     }

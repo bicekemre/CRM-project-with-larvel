@@ -49,12 +49,16 @@
                                     <a href="/clients" class="dropdown-item" data-key="t-calendar">Clients</a>
                                     <a href="/leads" class="dropdown-item" data-key="t-calendar">Leads</a>
                                     <div class="dropdown">
-                                        <i class="dropdown-item dropdown-toggle arrow-none" href="" id="topnav-revenue-management"
+                                        <a class="dropdown-item dropdown-toggle arrow-none" href="/services" id="topnav-revenue-management"
                                            role="button">
                                             <span data-key="t-ecommerce">Services</span> <div class="arrow-down"></div>
-                                        </i>
+                                        </a>
                                         <div class="dropdown-menu" aria-labelledby="topnav-revenue-management">
-                                            <a href="" class="dropdown-item" data-key="t-products">Service Type</a>
+                                            @isset($services)
+                                                @foreach($services as $service)
+                                                    <a href="/services/{{ $service->id }}" class="dropdown-item" data-key="t-products">{{ $service->name }}</a>
+                                                @endforeach
+                                            @endisset
                                         </div>
                                     </div>
                                 </div>
@@ -75,13 +79,13 @@
                                         <div class="dropdown-menu" aria-labelledby="topnav-revenue-management">
                                             <a href="/deal-without-incomes" class="dropdown-item" data-key="t-products">Deal Without Incomes</a>
                                             <a href="/payments" class="dropdown-item" data-key="t-products">Payments</a>
-                                            <a href="/waitinig-payment-deals" class="dropdown-item" data-key="t-products">Waiting Payment Deals</a>
+                                            <a href="/waiting-payment-deals" class="dropdown-item" data-key="t-products">Waiting Payment Deals</a>
                                             <a href="/unpaid-deals" class="dropdown-item" data-key="t-products">Unpaid Deals</a>
                                         </div>
                                     </div>
                                     <a href="/expenses" class="dropdown-item" data-key="t-calendar">Expenses</a>
                                     <a href="/invoices" class="dropdown-item" data-key="t-calendar">Invoices</a>
-                                    <a href="/invoices" class="dropdown-item" data-key="t-calendar">Refunds</a>
+                                    <a href="/refunds" class="dropdown-item" data-key="t-calendar">Refunds</a>
                                     <div class="dropdown">
                                         <i class="dropdown-item dropdown-toggle arrow-none" href="" id="topnav-revenue-management"
                                            role="button">

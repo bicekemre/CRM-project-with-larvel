@@ -11,5 +11,8 @@ class Expense extends Model
 
     protected $guarded = ['id'];
 
-
+    public function service()
+    {
+        return $this->belongsTo(Service::class, 'id_service', 'id');
+    }
 }

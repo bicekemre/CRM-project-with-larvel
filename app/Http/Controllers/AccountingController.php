@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\Expense;
+use App\Models\Invoice;
+use App\Models\Refund;
 use App\Models\Revenue;
+use App\Models\Service;
 use Illuminate\Http\Request;
 
 class AccountingController extends Controller
@@ -19,58 +23,77 @@ class AccountingController extends Controller
 
         $revenues = Revenue::all();
 
-        $totalExpense = Expense::sum('amount');
-        $totalRevenue = Revenue::sum('amount');
-
-        $profit =  ($totalRevenue - $totalExpense);
-        $profitPercentage =  ($profit / $totalRevenue) * 100;
+        $profits = Revenue::getProfits();
 
         return view('accounting.summary', compact(
-            'expenses', 'revenues',
-            'totalRevenue', 'totalExpense',
-            'profit', 'profitPercentage',
+            'expenses',
+            'revenues',
+            'profits',
         ));
-    }
-
-
-    public function  dealWithoutIncomes()
-    {
-        $revenues = Revenue::all();
-
-
-
-        return view('accounting.deal-without-incomes', compact('revenues'));
     }
 
     public function  invoices()
     {
-        return view('accounting.invoices');
+        $invoices = Invoice::all();
+
+        return view('accounting.invoices', compact('invoices'));
     }
 
-    public function  payments()
+    public function create(Request $request)
     {
-        return view('accounting.payments');
+        $number = rand(100000, 999999);
+
+        $invoice = Invoice::create([
+            'number' => $number,
+            'billing_name' => $request->billing_name,
+            'date' => $request->date,
+            'total_amount' => $request->total_amount,
+            'instalment' => $request->instalment,
+            'type' => $request->type,
+            'status' => $request->status,
+        ]);
+        $invoice->save();
+        return redirect()->route('invoices');
     }
 
-    public function  waitingPaymentDeals()
+    public function edit($id)
     {
-        return view('accounting.waitinig-payment-deals');
+        $invoice = Invoice::find($id);
+
+        return view('accounting.update', compact('invoice'));
     }
 
-    public function  unpaidDeals()
+    public function update(Request $request, $id)
     {
-        return view('accounting.unpaid-deals');
+        $invoice = Invoice::find($id);
+
+        $invoice->update([
+            'billing_name' => $request->billing_name,
+            'date' => $request->date,
+            'total_amount' => $request->total_amount,
+            'instalment' => $request->instalment,
+            'type' => $request->type,
+            'status' => $request->status,
+        ])->save();
+
+        return redirect()
+            ->route('invoices')
+            ->with('success', 'updated successfully.')
+            ->withInput($request->except(['password']));
     }
 
-    public function  expenses()
+    public function delete($id)
     {
-        return view('accounting.expenses');
+        $invoice = Invoice::find($id);
+
+        $invoice->delete();
+
+        return redirect()
+            ->route('invoices')
+            ->with('success', ' deleted successfully.');
     }
 
-    public function  refunds()
-    {
-        return view('accounting.refunds');
-    }
+
 
     public function  products()
     {

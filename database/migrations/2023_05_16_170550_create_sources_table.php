@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('sources', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('slug');
-            $table->string('type');
+            $table->string('name')->nullable();
+            $table->string('slug')->nullable();
+            $table->string('type')->nullable();
             $table->timestamps();
         });
     }

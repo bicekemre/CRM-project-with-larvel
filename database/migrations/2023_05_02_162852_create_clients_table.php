@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Service;
+use App\Models\Source;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,13 +16,14 @@ return new class extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('phone');
-            $table->string('email');
-            $table->string('address');
-            $table->string('type');
-            $table->foreignId('id_source');
-            $table->string('source_desc');
+            $table->string('name')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
+            $table->string('address')->nullable();
+            $table->string('type')->nullable();
+            $table->foreignIdFor(Source::class,'id_source')->nullable();
+            $table->foreignIdFor(Service::class,'id_service')->nullable();
+            $table->string('source_desc')->nullable();
             $table->foreignIdFor(User::class,'id_sales_staff')->nullable();
             $table->timestamps();
         });

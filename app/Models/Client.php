@@ -26,6 +26,11 @@ class Client extends Model
         return $this->hasMany(Revenue::class, 'id_client', 'id');
     }
 
+    public function service()
+    {
+        return $this->belongsTo(Service::class, 'id_service', 'id');
+    }
+
 
     public function rules()
     {

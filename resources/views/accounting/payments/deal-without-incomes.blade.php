@@ -2,7 +2,6 @@
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
-
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
@@ -50,81 +49,71 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row row-cols-xxl-5 row-cols-md-3 row-cols-1 g-0">
+                                @isset($services)
+                                    @foreach($services as $service)
+                                        <div class="col">
+                                            <div class="mt-md-0 py-3 px-4 mx-2">
+                                                <a data-filter=".data-{{ $service->slug }}" type="button" data-bs-toggle="tab" class="btn btn-outline-primary nav-link">{{ $service->name }}</a>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endisset
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="row">
-                <div class="col-xxl-6 col-xl-6">
+                <div class="col-xl-12">
                     <div class="card">
-                        <div class="card-header justify-content-between d-flex align-items-center">
-                            <h4 class="card-title">Income</h4>
-                            <div>
-                                <a href="/payments" type="button" class="btn btn-outline-success">See all</a>
-                            </div>
-                        </div><!-- end card header -->
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table mb-0">
+                                <table class="table table-centered align-middle table-nowrap table-hover mb-0">
                                     <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Client</th>
-                                        <th>Amount</th>
-                                        <th>Date</th>
+                                        <th scope="col">Service</th>
+                                        <th scope="col">Client Name</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">Amount</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     @isset($revenues)
                                         @foreach($revenues as $revenue)
-                                            <tr>
-                                                <th scope="row"></th>
-                                                <td>{{ $revenue->client->name }}</td>
-                                                <td>{{ $revenue->amount }}</td>
-                                                <td>{{ $revenue->payment_date}}</td>
-                                            </tr>
-                                        @endforeach
-                                    @endisset
-                                    </tbody>
-                                </table><!-- end table -->
-                            </div><!-- end table responsive -->
-                        </div><!-- end card body -->
-                    </div><!-- end card -->
-                </div><!-- end col --> <div class="col-xxl-6 col-xl-6">
-                    <div class="card">
-                        <div class="card-header justify-content-between d-flex align-items-center">
-                            <h4 class="card-title">Expense</h4>
-                            <div>
-                                <a href="/expenses" type="button" class="btn btn-outline-danger ">See all</a>
-                            </div>
-                        </div><!-- end card header -->
+                                            <tr class="data-{{ $revenue->service->slug }} ">
+                                                <td>{{ $revenue->service->name }}</td>
+                                                <td>
+                                                    <h5 class="font-size-15"> {{ $revenue->client->name }}</h5>
+                                                </td>
+                                                <td>{{ $revenue->client->email }}</td>
+                                                <td>{{ $revenue->payment_date }}</td>
+                                                <td>{{ $revenue->desc }}</td>
+                                                <td>
+                                                    ${{ $revenue->amount }}
+                                                </td>
 
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table mb-0">
-                                    <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Description</th>
-                                        <th>Amount</th>
-                                        <th>Date</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @isset($expenses)
-                                        @foreach($expenses as $expense)
-                                            <tr>
-                                                <th scope="row"></th>
-                                                <td>{{ $expense->desc }}</td>
-                                                <td>{{ $expense->amount }}</td>
-                                                <td>{{ $expense->payment_date}}</td>
                                             </tr>
                                         @endforeach
                                     @endisset
                                     </tbody>
-                                </table><!-- end table -->
-                            </div><!-- end table responsive -->
-                        </div><!-- end card body -->
-                    </div><!-- end card -->
-                </div><!-- end col -->
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+@endsection
+@section('script')
+    <script src="{{ URL::asset('js/script.js') }}"></script>
 @endsection
