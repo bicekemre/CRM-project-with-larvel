@@ -25,7 +25,7 @@
                                 <div class="col-3">
                                     <div class="mt-3 mt-md-0 py-3 px-4 mx-2">
                                         <p class="text-wrap-50 mb-2 text-truncate">Profit</p>
-                                        <h3 class="text-wrap mb-0">{{ $profits['profitPercentage'] ?? 0 }}%</h3>
+                                        <h3 class="text-wrap mb-0">{{ number_format($profits['profitPercentage'], 2) ?? 0 }}%</h3>
                                     </div>
                                 </div><!-- end col -->
 
@@ -76,7 +76,7 @@
                                         @foreach($revenues as $revenue)
                                             <tr>
                                                 <th scope="row"></th>
-                                                <td>{{ $revenue->client->name }}</td>
+                                                <td>{{ $revenue->client->name ?? ''}}</td>
                                                 <td>{{ $revenue->amount }}</td>
                                                 <td>{{ $revenue->payment_date}}</td>
                                             </tr>

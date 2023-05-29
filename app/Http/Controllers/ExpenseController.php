@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class ExpenseController extends Controller
 {
 
-    public function  expenses()
+    public function  index()
     {
         $expenses = Expense::all();
 

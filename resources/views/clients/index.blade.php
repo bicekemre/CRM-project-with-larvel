@@ -101,10 +101,10 @@
                                             <td>{{ $client->address }}</td>
                                             <td>{{ $client->type }}</td>
                                             <td>
-                                                <p class="mb-1">{{ $client->source->name }}</p>
+                                                <p class="mb-1">{{ $client->source->name ?? '' }}</p>
                                                 <p class="mb-0">{{ $client->source_desc }}</p>
                                             </td>
-                                            <td>{{ $client->staff->name }}</td>
+                                            <td>{{ $client->staff->name ?? ''}}</td>
                                             <td>{{ $client->created_at }}</td>
                                             <td>
                                                 <div class="dropdown">
@@ -113,12 +113,15 @@
                                                         <i class="mdi mdi-dots-horizontal font-size-18"></i>
                                                     </a>
                                                     <ul class="dropdown-menu dropdown-menu-end">
-                                                        <li><a href="/client-edit/{{ $client->id }}" class="dropdown-item"><i
+                                                        <li><a href="/client-edit/{{ $client->id }}/{{ $client->type }}" class="dropdown-item"><i
                                                                         class="mdi mdi-pencil font-size-16 text-success me-1"></i>
                                                                 Edit</a></li>
                                                         <li><a href="/client/delete/{{ $client->id }}" class="dropdown-item"><i
                                                                         class="mdi mdi-trash-can font-size-16 text-danger me-1"></i>
                                                                 Delete</a></li>
+                                                        <li><a href="/client/profile/{{ $client->id }}" class="dropdown-item"><i
+                                                                        class="mdi mdi-face-profile font-size-16 text-primary me-1"></i>
+                                                                Profile</a></li>
                                                     </ul>
                                                 </div>
                                             </td>

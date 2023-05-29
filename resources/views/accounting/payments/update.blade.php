@@ -11,7 +11,7 @@
                 <div class="col-lg-8">
                     <div class="card">
                         <div class="card-header d-flex align-items-center">
-                            <h4 class="card-title">Create Client</h4>
+                            <h4 class="card-title">Update Payment</h4>
                         </div>
                         <!-- end card header -->
                         <div class="card-body">

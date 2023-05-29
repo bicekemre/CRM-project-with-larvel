@@ -67,6 +67,7 @@ class PaymentController extends Controller
     {
         $revenue = Revenue::find($id);
 
+
         return view('accounting.payments.update', compact('revenue'));
     }
 

@@ -17,7 +17,7 @@ class Revenue extends Model
         $totalRevenue = Revenue::sum('amount');
         $totalRefunds = Refund::sum('amount');
 
-        $profit =  ($totalRevenue - $totalExpense);
+        $profit =  ($totalRevenue - $totalExpense - $totalRefunds);
 
         $profitPercentage = ($totalRevenue == 0) ? 0 : ($profit / $totalRevenue) * 100;
 

@@ -88,12 +88,12 @@
                                     <tbody>
                                     @isset($revenues)
                                         @foreach($revenues as $revenue)
-                                            <tr class="data-{{ $revenue->service->slug }} ">
-                                                <td>{{ $revenue->service->name }}</td>
+                                            <tr class="data-{{ $revenue->service->slug ?? ''}} ">
+                                                <td>{{ $revenue->service->name ?? ''}}</td>
                                                 <td>
-                                                    <h5 class="font-size-15"> {{ $revenue->client->name }}</h5>
+                                                    <h5 class="font-size-15"> {{ $revenue->client->name ?? ''}}</h5>
                                                 </td>
-                                                <td>{{ $revenue->client->email }}</td>
+                                                <td>{{ $revenue->client->email ?? ''}}</td>
                                                 <td>{{ $revenue->payment_date }}</td>
                                                 <td>{{ $revenue->desc }}</td>
                                                 <td>

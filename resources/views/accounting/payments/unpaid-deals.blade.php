@@ -21,16 +21,16 @@
                                     @isset($revenues)
                                         @foreach($revenues as $revenue)
                                             <tr>
-                                                <td>{{ $revenue->client->id }}</td>
+                                                <td>{{ $revenue->client->id ?? '' }}</td>
                                                 <td>
                                                     <div>
-                                                        {{ $revenue->client->name }}
+                                                        {{ $revenue->client->name ?? ''}}
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <h5 class="font-size-15">{{ $revenue->service->name }}</h5>
+                                                    <h5 class="font-size-15">{{ $revenue->service->name ?? ''}}</h5>
                                                 </td>
-                                                <td>{{ $revenue->invoice->total_amount }}</td>
+                                                <td>{{ $revenue->invoice->total_amount ?? ''}}</td>
                                             </tr>
                                         @endforeach
                                     @endisset

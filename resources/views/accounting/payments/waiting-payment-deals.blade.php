@@ -24,15 +24,15 @@
                                             <tr>
                                                 <td>
                                                     <div>
-                                                      {{ $revenue->client->name }}
+                                                      {{ $revenue->client->name ?? ''}}
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <h5 class="font-size-15">{{ $revenue->service->name }}</h5>
+                                                    <h5 class="font-size-15">{{ $revenue->service->name ?? ''}}</h5>
                                                 </td>
-                                                <td>{{ $revenue->invoice->total_amount }}</td>
+                                                <td>{{ $revenue->invoice->total_amount ?? ''}}</td>
                                                 <td>{{ $revenue->amount }}</td>
-                                                <td>{{ ($revenue->invoice->total_amount)-($revenue->amount)}}</td>
+                                                <td>{{ ($revenue->invoice->total_amount)-($revenue->amount) ?? 0}}</td>
                                             </tr>
                                         @endforeach
                                     @endisset

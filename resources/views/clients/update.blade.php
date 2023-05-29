@@ -15,10 +15,10 @@
                         </div>
                         <!-- end card header -->
                         <div class="card-body">
-                            <form action="{{ route('clients.update', $client->id) }}" method="POST">
+                            <form action="/client-update/  {{$client->id}} / {{$client->type}}" method="POST">
                                 @method('PUT')
                                 @csrf
-                                <input type="hidden" value="">
+                                <input type="hidden" value="{{ $client->id }}">
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="mb-3">

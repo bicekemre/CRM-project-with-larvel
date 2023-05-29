@@ -1,104 +1,205 @@
 @extends('layout.main')
 @section('content')
+    @if ($message = Session::get('success'))
+        <div class="alert alert-success">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
     <div class="page-content">
         <div class="container-fluid">
+
             <div class="row">
-                <div class="col-12">
+                <div class="col-xl-3">
+                    <!-- Profile-->
                     <div class="card">
-                        <div class="card-body">
-                            <div class="row mb-2">
-                                <div class="col-sm-4">
-                                    <div class="search-box me-2 mb-2 d-inline-block">
-                                        <div class="position-relative">
-                                            <input type="text" class="form-control" placeholder="Search...">
-                                            <i class="bx bx-search search-icon"></i>
+                        <div class="card-body p-0">
+                            <div class="user-profile-img">
+                                <img src="{{asset('assets/images/pattern-bg.jpg')}}" class="profile-img profile-foreground-img rounded-top" style="height: 120px;" alt="">
+                                <div class="overlay-content rounded-top">
+                                    <div>
+                                        <div class="user-nav p-3">
+                                            <div class="d-flex justify-content-end">
+                                                <div class="dropdown">
+                                                    <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <i class="bx bx-dots-horizontal font-size-20 text-white"></i>
+                                                    </a>
+
+                                                    <ul class="dropdown-menu dropdown-menu-end">
+                                                        <li><a class="dropdown-item" href="#">Action</a></li>
+                                                        <li><a class="dropdown-item" href="#">Another action</a>
+                                                        </li>
+                                                        <li><a class="dropdown-item" href="#">Something else
+                                                                here</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-8">
-                                    <div class="text-sm-end">
-                                        <button type="button" class="btn btn-light mb-4" data-bs-toggle="modal" data-bs-target="#addInvoiceModal"><i class="mdi mdi-plus me-1"></i> Add Payment</button>
+                            </div>
+                            <!-- end user-profile-img -->
 
+                            <div class="mt-n5 position-relative">
+                                <div class="text-center">
+                                    <img src="{{ asset('assets/images/users/avatar.jpg') }}" alt="" class="avatar-xl rounded-circle img-thumbnail">
+
+                                    <div class="mt-3">
+                                        <div class="mt-4">
+                                            <a href="/" class="btn btn-primary waves-effect waves-light btn-sm" data-bs-toggle="modal" data-bs-target="#addInvoiceModal"><i class="bx bx-plus me-1 align-middle"></i> Add Payment</a>
+                                        </div>
                                     </div>
-                                </div><!-- end col-->
+
+                                </div>
                             </div>
 
+                            <div class="p-3 mt-3">
+                                <div class="row text-center">
+                                    <div class="col-6 border-end">
+                                        <div class="p-1">
+                                            <a href="/client-edit/{{ $client->id }}/{{ $client->type }}" class="btn btn-primary waves-effect waves-light btn-sm"><i class="bx bx-pencil me-1 align-middle"></i> Edit</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="p-1">
+                                            <a href="/client/delete/{{ $client->id }}" class="btn btn-danger waves-effect waves-light btn-sm"><i class="bx bx-trash me-1 align-middle"></i> delete</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end card body -->
+                    </div>
+                    <!-- Contact-->
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-2">Contact</h5>
+
+                            <div>
+                                <ul class="list-unstyled mb-0 text-muted">
+                                    <li>
+                                        <div class="d-flex align-items-center py-2">
+                                            <div class="flex-grow-1">
+                                                <i class="mdi mdi-email font-size-16 text-dark me-1"></i> Email
+                                            </div>
+                                            <div class="flex-shrink-0">
+                                                <div><a href="mailto: {{ $client->email }}">{{ $client->email }}</a></div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="d-flex align-items-center py-2">
+                                            <div class="flex-grow-1">
+                                                <i class="mdi mdi-phone font-size-16 text-info me-1"></i> Phone
+                                            </div>
+                                            <div class="flex-shrink-0">
+                                                <div><a href="tel: {{ $client->phone }}">{{ $client->phone }}</a> </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="d-flex align-items-center py-2">
+                                            <div class="flex-grow-1">
+                                                <i class="mdi mdi-whatsapp font-size-16 text-primary me-1"></i> Whatsapp
+                                            </div>
+                                            <div class="flex-shrink-0">
+                                                <div><a href="https://api.whatsapp.com/send?phone={{ $client->phone }}">Contact</a></div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- end card body -->
+                    </div>
+                </div>
+                <div class="col-xl-4">
+                    <div class="card">
+                        <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table align-middle table-nowrap">
-                                    <thead>
+                                <table class="table table-nowrap table-hover mb-1">
+                                    <thead class="bg-light">
                                     <tr>
-                                        <th>#</th>
-                                        <th>Service</th>
-                                        <th>Client Name</th>
-                                        <th>Payment Type</th>
-                                        <th>Payment Date</th>
-                                        <th>Created Date</th>
-                                        <th>Amount</th>
-                                        <th>Action</th>
+                                        <th scope="col">Field</th>
+                                        <th scope="col">Value</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @isset($revenues)
-                                        @foreach($revenues as $revenue)
-                                            <tr>
-                                                <td>
-                                                    <div class="form-check font-size-16">
-                                                        <input class="form-check-input" type="checkbox"
-                                                               id="customerlistcheck01">
-                                                        <label class="form-check-label" for="customerlistcheck01"></label>
-                                                    </div>
-                                                </td>
-                                                <td>{{ $revenue->service->name ?? ''}}</td>
-                                                <td>{{ $revenue->client->name ?? ''}}</td>
-
-                                                <td>{{ $revenue->payment }}</td>
-                                                <td>{{ $revenue->payment_date}}</td>
-                                                <td>{{ $revenue->created_at }}</td>
-                                                <td>${{ $revenue->amount }}</td>
-                                                <td>
-                                                    <div class="dropdown">
-                                                        <a href="#" class="dropdown-toggle card-drop" data-bs-toggle="dropdown"
-                                                           aria-expanded="false">
-                                                            <i class="mdi mdi-dots-horizontal font-size-18"></i>
-                                                        </a>
-                                                        <ul class="dropdown-menu dropdown-menu-end">
-                                                            <li><a href="/payment/edit/{{ $revenue->id }}" class="dropdown-item"><i
-                                                                            class="mdi mdi-pencil font-size-16 text-success me-1"></i>
-                                                                    Edit</a></li>
-                                                            <li><a href="/payment/delete/{{ $revenue->id }}" class="dropdown-item"><i
-                                                                            class="mdi mdi-trash-can font-size-16 text-danger me-1"></i>
-                                                                    Delete</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    @endisset
+                                    <tr>
+                                        <th scope="row">Client Name</th>
+                                        <td>{{ $client->name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Phone</th>
+                                        <td><a href="#" class="text-dark">{{ $client->phone }}</a></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Address</th>
+                                        <td>{{ $client->name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Source</th>
+                                        <td>{{ $client->source->name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Service</th>
+                                        <td><span class="badge badge-soft-primary font-size-12">{{ $client->service->name ?? ''}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Service</th>
+                                        <td><span class="badge badge-soft-primary font-size-12">{{ $client->staff->name ?? ''}}</span></td>
+                                    </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <ul class="pagination pagination-rounded justify-content-end mb-2">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="javascript: void(0);" aria-label="Previous">
-                                        <i class="mdi mdi-chevron-left"></i>
-                                    </a>
-                                </li>
-                                <li class="page-item active"><a class="page-link" href="javascript: void(0);">1</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">2</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">3</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">4</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">5</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="javascript: void(0);" aria-label="Next">
-                                        <i class="mdi mdi-chevron-right"></i>
-                                    </a>
-                                </li>
-                            </ul>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- end row -->
+                <div class="col-xl-5">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Transaction History</h5>
+                            <table class="table table-nowrap table-hover mb-1 mt-2">
+                                <thead class="bg-light">
+                                <tr>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Service / Date</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @isset($revenues)
+                                    @foreach($revenues as $revenue)
+                                <tr>
+                                    <th scope="row">${{ $revenue->amount }}</th>
+                                    <td><a href="/services/{{ $revenue->service->id ??  ''}}" class="text-dark">
+                                            {{ $revenue->service->name ?? ''}}
+                                        </a>
+                                    <p>{{ $revenue->payment_date }}</p>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <a class="text-muted dropdown-toggle font-size-18 px-2" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                                                <i class="bx bx-dots-vertical-rounded"></i>
+                                            </a>
+
+                                            <div class="dropdown-menu dropdown-menu-end">
+                                                <a class="dropdown-item" href="/payment/edit/{{ $revenue->id }}">Edit</a>
+                                                <a class="dropdown-item" href="/payment/delete/{{ $revenue->id }}">Delete</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                                @endisset
+                            </table>
+
+                        </div><!-- end card body -->
+                    </div>
+
+
+
+                </div>
+            </div><!-- end row -->
 
             <div class="modal fade" id="addInvoiceModal" tabindex="-1" aria-labelledby="addInvoiceModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered">
@@ -151,12 +252,7 @@
                                                 <div class="col-6 offset-3 mb-3 align-content-center">
                                                     <label class="form-label">Client</label>
                                                     <select name="id_client" class="form-select">
-                                                        <option value="">Select</option>
-                                                        @isset($clients)
-                                                            @foreach($clients as $client)
-                                                                <option value="{{ $client->id }}">{{ $client->name }}</option>
-                                                            @endforeach
-                                                        @endisset
+                                                        <option value="{{ $client->id }}">{{ $client->name }}</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -164,7 +260,7 @@
                                                 <div class="col-6 offset-3 mb-3">
                                                     <label class="form-label">Service</label>
                                                     <select name="id_service" class="form-select">
-                                                        <option value="">Select</option>
+                                                        <option value="{{ $client->service->id ?? null }}">{{ $client->service->name }}</option>
                                                         @isset($services)
                                                             @foreach($services as $service)
                                                                 <option value="{{ $service->id }}">{{ $service->name }}</option>
@@ -347,12 +443,17 @@
                     </div>
                 </div>
             </div>
+
         </div> <!-- container-fluid -->
     </div>
 @endsection
-@section('script')
-    <!-- flatpickr js -->
-    <script src="{{ asset('assets/libs/flatpickr/flatpickr.min.js') }}"></script>
-    <!-- invoice-list init -->
-    <script src="{{ asset('assets/js/pages/invoice-list.init.js') }}"></script>
-@endsection
+    @section('script')
+        <!-- apexcharts -->
+        <script src="{{ asset('assets/libs/apexcharts/apexcharts.min.js') }}"></script>
+        <!-- profile init -->
+        <script src="{{ asset('assets/js/pages/profile.init.js') }}"></script>
+        <!-- flatpickr js -->
+        <script src="{{ asset('assets/libs/flatpickr/flatpickr.min.js') }}"></script>
+        <!-- invoice-list init -->
+        <script src="{{ asset('assets/js/pages/invoice-list.init.js') }}"></script>
+    @endsection

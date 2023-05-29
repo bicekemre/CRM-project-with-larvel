@@ -19,6 +19,13 @@ class ServiceController extends Controller
         return view('clients.services',compact('services'));
     }
 
+    public function show($id)
+    {
+        $service = Service::find($id);
+
+        return view('clients.', compact(''));
+    }
+
     public function clients ($id)
     {
         $clients = Client::where(['id_service' => $id])->get();

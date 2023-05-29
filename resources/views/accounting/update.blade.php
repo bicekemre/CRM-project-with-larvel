@@ -30,14 +30,6 @@
                                         </div>
 
                                         <div class="mb-3">
-                                            <label for="phone-mask" class="form-label">Installment</label>
-                                            <input type="text" class="form-control" id="phone-mask" value="{{ $invoice->installment }}" name="installment">
-                                            @error('installment')
-                                            <span class="text-danger">{{$message}}</span>
-                                            @enderror
-                                        </div>
-
-                                        <div class="mb-3">
                                             <label for="email-input" class="form-label">Description</label>
                                             <input class="form-control" type="text" id="email-input" value="{{ $invoice->desc }}" name="desc">
                                             @error('desc')
@@ -54,20 +46,6 @@
                                     <!-- end col -->
 
                                     <div class="col-lg-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Client</label>
-                                            <select name="id_client" class="form-select">
-                                                @isset($revenue->id_client)<option selected value="{{ $revenue->client->id }}">{{ $revenue->client->name }}</option>@endisset
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label class="form-label">Service</label>
-                                            <select name="id_service" class="form-select">
-                                                @isset($revenue->id_service)<option selected value="{{ $revenue->service->id }}">{{ $revenue->service->name }}</option>@endisset
-                                            </select>
-                                        </div>
-
 
                                         <div class="mb-3">
                                             <label class="form-label">Payment type :</label>
@@ -78,7 +56,18 @@
                                                 <option value="CA">Cash</option>
                                             </select>
                                         </div>
-
+                                        <div class="mb-3">
+                                            <label class="form-label">Payment Status :</label>
+                                            <select name="status" class="form-select">
+                                                @if($invoice->status == 1)
+                                                <option selected value="1">Paid</option>
+                                                <option value="0">Pending</option>
+                                                @else
+                                                <option selected value="0">Pending</option>
+                                                <option  value="1">Paid</option>
+                                                @endif
+                                            </select>
+                                        </div>
 
 
                                     </div>

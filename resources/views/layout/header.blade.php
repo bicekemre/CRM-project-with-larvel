@@ -43,24 +43,25 @@
                                 <a class="nav-link dropdown-toggle arrow-none " href="/clients" id="topnav-clients" role="button"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="bx bxs-user-badge icon"></i>
-                                    <span data-key="t-elements">Clients</span> <div class="arrow-down"></div>
+                                    <span data-key="t-elements">CRM</span> <div class="arrow-down"></div>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="topnav-pages">
                                     <a href="/clients" class="dropdown-item" data-key="t-calendar">Clients</a>
                                     <a href="/leads" class="dropdown-item" data-key="t-calendar">Leads</a>
-                                    <div class="dropdown">
-                                        <a class="dropdown-item dropdown-toggle arrow-none" href="/services" id="topnav-revenue-management"
-                                           role="button">
-                                            <span data-key="t-ecommerce">Services</span> <div class="arrow-down"></div>
-                                        </a>
-                                        <div class="dropdown-menu" aria-labelledby="topnav-revenue-management">
-                                            @isset($services)
-                                                @foreach($services as $service)
-                                                    <a href="/services/{{ $service->id }}" class="dropdown-item" data-key="t-products">{{ $service->name }}</a>
-                                                @endforeach
-                                            @endisset
-                                        </div>
-                                    </div>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle arrow-none " href="/services" id="topnav-clients" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="bx bxs-user-badge icon"></i>
+                                    <span data-key="t-elements">Services</span> <div class="arrow-down"></div>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="topnav-pages">
+                                    @isset($services)
+                                        @foreach($services as $service)
+                                            <a href="/services/{{ $service->id }}" class="dropdown-item" data-key="t-products">{{ $service->name }}</a>
+                                        @endforeach
+                                    @endisset
                                 </div>
                             </li>
 

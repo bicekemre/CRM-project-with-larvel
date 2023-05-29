@@ -15,7 +15,7 @@
                         </div>
                         <!-- end card header -->
                         <div class="card-body">
-                            <form action="{{ route('payment.update', $revenue->id) }}" method="POST">
+                            <form action="{{ route('expense.update', $expense->id) }}" method="POST">
                                 @method('PUT')
                                 @csrf
                                 <input type="hidden" value="">
@@ -23,23 +23,15 @@
                                     <div class="col-lg-6">
                                         <div class="mb-3">
                                             <label for="name" class="form-label">Amount</label>
-                                            <input type="text" class="form-control" id="name" value="{{ $revenue->amount }}" name="amount">
+                                            <input type="text" class="form-control" id="name" value="{{ $expense->amount }}" name="amount">
                                             @error('amount')
                                             <span class="text-danger">{{$message}}</span>
                                             @enderror
                                         </div>
 
                                         <div class="mb-3">
-                                            <label for="phone-mask" class="form-label">Installment</label>
-                                            <input type="text" class="form-control" id="phone-mask" value="{{ $revenue->installment }}" name="installment">
-                                            @error('installment')
-                                            <span class="text-danger">{{$message}}</span>
-                                            @enderror
-                                        </div>
-
-                                        <div class="mb-3">
                                             <label for="email-input" class="form-label">Description</label>
-                                            <input class="form-control" type="text" id="email-input" value="{{ $revenue->desc }}" name="desc">
+                                            <input class="form-control" type="text" id="email-input" value="{{ $expense->desc }}" name="desc">
                                             @error('desc')
                                             <span class="text-danger">{{$message}}</span>
                                             @enderror
@@ -54,17 +46,11 @@
                                     <!-- end col -->
 
                                     <div class="col-lg-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Client</label>
-                                            <select name="id_client" class="form-select">
-                                                @isset($revenue->id_client)<option selected value="{{ $revenue->client->id }}">{{ $revenue->client->name }}</option>@endisset
-                                            </select>
-                                        </div>
 
                                         <div class="mb-3">
                                             <label class="form-label">Service</label>
                                             <select name="id_service" class="form-select">
-                                                @isset($revenue->id_service)<option selected value="{{ $revenue->service->id }}">{{ $revenue->service->name }}</option>@endisset
+                                                @isset($expense->id_service)<option selected value="{{ $expense->service->id }}">{{ $expense->service->name }}</option>@endisset
                                             </select>
                                         </div>
 

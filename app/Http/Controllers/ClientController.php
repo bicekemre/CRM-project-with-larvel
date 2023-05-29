@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ClientRequest;
 use App\Models\Client;
+use App\Models\Revenue;
 use App\Models\Role;
 use App\Models\Source;
 use App\Models\User;
@@ -58,7 +59,7 @@ class ClientController extends Controller
             ->withInput($request->except(['password']));
     }
 
-    public function edit($id)
+    public function edit($id, $type)
     {
         $sources = Source::all();
 
@@ -72,7 +73,7 @@ class ClientController extends Controller
             $query->where('id', $roleId);
         })->get();
 
-        return view('clients.update', compact('client','staffs', 'sources'));
+        return view('clients.update', compact('client','staffs', 'sources', 'type'));
     }
 
     public function update(Request $request, $id)
@@ -113,6 +114,15 @@ class ClientController extends Controller
         $lead->update(['type' => 'client']);
 
         return redirect('/leads');
+    }
+
+    public function profile($id)
+    {
+        $client  = Client::find($id);
+
+        $revenues = Revenue::where(['id_client' => $id])->get();
+
+        return view('clients.profile' , compact('client', 'revenues'));
     }
 
     public function delete($id)
