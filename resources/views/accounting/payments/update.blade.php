@@ -1,4 +1,10 @@
 @extends('layout.main')
+@section('page-name', 'Payments-Update')
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="/accounting">Accounting</a></li>
+    <li class="breadcrumb-item"><a href="/payments">Payments</a></li>
+@endsection
+@section('active-page', 'Update')
 @section('content')
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
@@ -15,7 +21,7 @@
                         </div>
                         <!-- end card header -->
                         <div class="card-body">
-                            <form action="{{ route('payment.update', $revenue->id) }}" method="POST">
+                            <form action="{{ route('payment.update', $revenue->id) }}" class="needs-validation" method="POST" autocomplete="off" novalidate>
                                 @method('PUT')
                                 @csrf
                                 <input type="hidden" value="">
@@ -23,10 +29,7 @@
                                     <div class="col-lg-6">
                                         <div class="mb-3">
                                             <label for="name" class="form-label">Amount</label>
-                                            <input type="text" class="form-control" id="name" value="{{ $revenue->amount }}" name="amount">
-                                            @error('amount')
-                                            <span class="text-danger">{{$message}}</span>
-                                            @enderror
+                                            <input type="text" class="form-control @error('amount') is-invalid @enderror " id="name" value="{{ $revenue->amount }}" name="amount" required>
                                         </div>
 
                                         <div class="mb-3">
@@ -57,14 +60,14 @@
                                         <div class="mb-3">
                                             <label class="form-label">Client</label>
                                             <select name="id_client" class="form-select">
-                                                @isset($revenue->id_client)<option selected value="{{ $revenue->client->id }}">{{ $revenue->client->name }}</option>@endisset
+                                                @isset($revenue->id_client)<option selected value="{{ $revenue->client->id ?? null}}">{{ $revenue->client->name ?? null}}</option>@endisset
                                             </select>
                                         </div>
 
                                         <div class="mb-3">
                                             <label class="form-label">Service</label>
                                             <select name="id_service" class="form-select">
-                                                @isset($revenue->id_service)<option selected value="{{ $revenue->service->id }}">{{ $revenue->service->name }}</option>@endisset
+                                                @isset($revenue->id_service)<option selected value="{{ $revenue->service->id ?? null}}">{{ $revenue->service->name ?? null}}</option>@endisset
                                             </select>
                                         </div>
 

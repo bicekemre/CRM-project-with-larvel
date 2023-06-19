@@ -1,4 +1,6 @@
 @extends('layout.main')
+@section('page-name', 'Dashboard')
+
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
@@ -9,41 +11,30 @@
                         <div class="card-body pb-2">
                             <div class="d-flex align-items-start mb-4 mb-xl-0">
                                 <div class="flex-grow-1">
-                                    <h5 class="card-title">Invoice Overview</h5>
-                                </div>
-                                <div class="flex-shrink-0">
-                                    <div class="dropdown">
-                                        <a class="dropdown-toggle text-reset" href="#" data-bs-toggle="dropdown"
-                                           aria-haspopup="true" aria-expanded="false">
-                                            <span class="fw-semibold">Sort By:</span> <span class="text-muted">Yearly<i
-                                                        class="mdi mdi-chevron-down ms-1"></i></span>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-end">
-                                            <a class="dropdown-item" href="#">Yearly</a>
-                                            <a class="dropdown-item" href="#">Monthly</a>
-                                            <a class="dropdown-item" href="#">Weekly</a>
-                                            <a class="dropdown-item" href="#">Today</a>
-                                        </div>
-                                    </div>
+                                    <h5 class="card-title">Revenue Overview</h5>
                                 </div>
                             </div>
 
                             <div class="row align-items-center">
                                 <div class="col-xl-4">
-                                    <div class="card bg-light mb-0">
+                                    <div class="card bg-light mb-0 tab-pane active"  id="yearly" role="tabpanel" >
                                         <div class="card-body">
                                             <div class="py-2">
                                                 <h5>Total Revenue:</h5>
-                                                <h2 class="mt-4 pt-1 mb-1">$9,542,00</h2>
-                                                <p class="text-muted font-size-15 text-truncate">From Jan 20,2022 to
-                                                    July,2022</p>
+                                                <h2 class="mt-4 pt-1 mb-1">${{ number_format($yearly['revenue']->sum('amount'), 2) }}</h2>
+                                                <p class="text-muted font-size-15 text-truncate">From {{ $startYear->format('M d, Y') }} to {{ $endDate->format('M,Y') }}</p>
 
                                                 <div class="d-flex mt-4 align-items-center">
-                                                    <div id="mini-1" data-colors='["--bs-success"]'
-                                                         class="apex-charts"></div>
                                                     <div class="ms-3">
-                                                        <span class="badge bg-danger"><i
-                                                                    class="mdi mdi-arrow-down me-1"></i>16.3%</span>
+                                                        @if($yearly['profitPercentage'] > 0)
+                                                            <span class="badge bg-success"><i
+                                                            class="mdi mdi-arrow-up me-1">
+                                                        @else
+                                                            <span class="badge bg-danger"><i
+                                                                        class="mdi mdi-arrow-down me-1">
+                                                        @endif
+                                                        </i>{{ number_format($yearly['profitPercentage'], 2) ?? 0}}%
+                                                    </span>
                                                     </div>
                                                 </div>
 
@@ -52,7 +43,7 @@
                                                         <div class="d-flex mt-2">
                                                             <i class="mdi mdi-square-rounded font-size-10 text-success mt-1"></i>
                                                             <div class="flex-grow-1 ms-2 ps-1">
-                                                                <h5 class="mb-1">3,526,56</h5>
+                                                                <h5 class="mb-1">${{ $yearly['profit'] ?? 0}}</h5>
                                                                 <p class="text-muted text-truncate mb-0">Net Profit</p>
                                                             </div>
                                                         </div>
@@ -61,7 +52,7 @@
                                                         <div class="d-flex mt-2">
                                                             <i class="mdi mdi-square-rounded font-size-10 text-primary mt-1"></i>
                                                             <div class="flex-grow-1 ms-2 ps-1">
-                                                                <h5 class="mb-1">5,324,85</h5>
+                                                                <h5 class="mb-1">{{ $yearly['totalRevenue'] ?? 0}}</h5>
                                                                 <p class="text-muted text-truncate mb-0">Net Revenue</p>
                                                             </div>
                                                         </div>
@@ -69,29 +60,28 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
 
                                 <div class="col-xl-8">
                                     <div>
-                                        <div id="column_chart" data-colors='["--bs-primary", "--bs-primary-rgb, 0.2"]'
-                                             class="apex-charts" dir="ltr"></div>
+                                        <div id="data-months" months="{{ json_encode($months) }}"></div>
+                                        <div id="data-profits" profits="{{ json_encode($data) }}"></div>
+                                        <div id="column_chart_two" data-colors='["--bs-primary", "--bs-primary-rgb, 0.2"]' class="apex-charts" dir="ltr"></div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
-
                     </div>
                 </div>
+
 
                 <div class="col-xl-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex align-items-start">
                                 <div class="flex-grow-1">
-                                    <h5 class="card-title mb-2">Order Stats</h5>
+                                    <h5 class="card-title mb-2">Clients Sources</h5>
                                 </div>
                                 <div class="flex-shrink-0">
                                     <div class="dropdown">
@@ -114,30 +104,29 @@
                                  class="apex-charts" dir="ltr"></div>
 
                             <div class="mt-1 px-2">
-                                <div class="order-wid-list d-flex justify-content-between border-bottom">
+
+                                    <div class="order-wid-list d-flex justify-content-between border-bottom">
                                     <p class="mb-0"><i
-                                                class="mdi mdi-square-rounded font-size-10 text-primary me-2"></i>Order
-                                        Completed</p>
+                                                class="mdi mdi-square-rounded font-size-10 text-primary me-2"></i>Instagram</p>
                                     <div>
-                                        <span class="pe-5">56,236</span>
-                                        <span class="badge bg-primary"> + 0.2% </span>
+                                        <span class="pe-5">128</span>
+                                        <span class="badge bg-primary">  75% </span>
                                     </div>
-                                </div>
+                                    </div>
+
                                 <div class="order-wid-list d-flex justify-content-between border-bottom">
                                     <p class="mb-0"><i
-                                                class="mdi mdi-square-rounded font-size-10 text-success me-2"></i>Order
-                                        Processing</p>
+                                                class="mdi mdi-square-rounded font-size-10 text-success me-2"></i>Pinterest</p>
                                     <div>
-                                        <span class="pe-5">12,596</span>
-                                        <span class="badge bg-success"> - 0.7% </span>
+                                        <span class="pe-5">26</span>
+                                        <span class="badge bg-success">  20% </span>
                                     </div>
                                 </div>
                                 <div class="order-wid-list d-flex justify-content-between">
-                                    <p class="mb-0"><i class="mdi mdi-square-rounded font-size-10 text-danger me-2"></i>Order
-                                        Cancel</p>
+                                    <p class="mb-0"><i class="mdi mdi-square-rounded font-size-10 text-danger me-2"></i>Website</p>
                                     <div>
-                                        <span class="pe-5">1,568</span>
-                                        <span class="badge bg-danger"> + 0.4% </span>
+                                        <span class="pe-5">4</span>
+                                        <span class="badge bg-danger">  5% </span>
                                     </div>
                                 </div>
                             </div>
@@ -148,9 +137,9 @@
             </div><!-- end row-->
 
             <div class="row">
-                <div class="col-xl-7">
+                <div class="col-xl-4">
                     <div class="row">
-                        <div class="col-xl-6">
+                        <div class="col-xl-12">
                             <div class="card">
                                 <div class="card-body pb-3">
                                     <div class="d-flex align-items-start">
@@ -349,152 +338,10 @@
                             </div>
                         </div>
 
-                        <div class="col-xl-6">
-                            <div class="card">
-                                <div class="card-body pb-1">
-                                    <div class="d-flex align-items-start">
-                                        <div class="flex-grow-1">
-                                            <h5 class="card-title mb-2">Product Traking</h5>
-                                        </div>
-                                        <div class="flex-shrink-0">
-                                            <div class="dropdown">
-                                                <a class=" dropdown-toggle" href="#" id="dropdownMenuButton2"
-                                                   data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <span class="text-muted">View All<i
-                                                                class="mdi mdi-chevron-down ms-1"></i></span>
-                                                </a>
-
-                                                <div class="dropdown-menu dropdown-menu-end"
-                                                     aria-labelledby="dropdownMenuButton2">
-                                                    <a class="dropdown-item" href="#">Members</a>
-                                                    <a class="dropdown-item" href="#">New Members</a>
-                                                    <a class="dropdown-item" href="#">Old Members</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="mx-n4 px-4" data-simplebar style="height: 258px;">
-                                        <div class="mt-3">
-                                            <ol class="activity-checkout mb-0 mt-2 ps-3">
-                                                <li class="checkout-item crypto-activity">
-                                                    <div class="avatar checkout-icon">
-                                                        <div class="avatar-title rounded-circle bg-primary">
-                                                            <i class="mdi mdi-cart text-white font-size-17"></i>
-                                                        </div>
-                                                    </div>
-                                                    <div class="feed-item-list">
-                                                        <div class="d-flex">
-                                                            <div class="flex-grow-1 overflow-hidden me-4">
-                                                                <h5 class="font-size-15 mb-1 text-truncate">Have 5
-                                                                    pending order.</h5>
-                                                                <p class="text-truncate text-muted mb-2">Delivered</p>
-                                                            </div>
-                                                            <div class="flex-shrink-0 text-end">
-                                                                <h5 class="mb-1 font-size-15">Nov 02</h5>
-                                                                <p class="text-muted mb-0">6 hour ago</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-
-                                                <li class="checkout-item crypto-activity">
-                                                    <div class="avatar checkout-icon">
-                                                        <div class="avatar-title rounded-circle bg-primary">
-                                                            <i class="mdi mdi-gift text-white font-size-17"></i>
-                                                        </div>
-                                                    </div>
-                                                    <div class="feed-item-list">
-                                                        <div class="d-flex">
-                                                            <div class="flex-grow-1 overflow-hidden me-4">
-                                                                <h5 class="font-size-15 mb-1 text-truncate">New Order
-                                                                    Received</h5>
-                                                                <p class="text-truncate text-muted mb-2">Pick Up</p>
-                                                            </div>
-                                                            <div class="flex-shrink-0 text-end">
-                                                                <h5 class="mb-1 font-size-15">Nov 03</h5>
-                                                                <p class="text-muted mb-0">1 day ago</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-
-                                                <li class="checkout-item crypto-activity">
-                                                    <div class="avatar checkout-icon">
-                                                        <div class="avatar-title rounded-circle bg-primary">
-                                                            <i class="mdi mdi-account text-white font-size-17"></i>
-                                                        </div>
-                                                    </div>
-                                                    <div class="feed-item-list">
-                                                        <div class="d-flex">
-                                                            <div class="flex-grow-1 overflow-hidden me-4">
-                                                                <h5 class="font-size-15 mb-1 text-truncate">Manager
-                                                                    Posted</h5>
-                                                                <p class="text-truncate text-muted mb-2">In Transit</p>
-                                                            </div>
-                                                            <div class="flex-shrink-0 text-end">
-                                                                <h5 class="mb-1 font-size-15">Nov 03</h5>
-                                                                <p class="text-muted mb-0">Yesterday</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-
-                                                <li class="checkout-item crypto-activity">
-                                                    <div class="avatar checkout-icon">
-                                                        <div class="avatar-title rounded-circle bg-primary">
-                                                            <i class="mdi mdi-wallet text-white font-size-20"></i>
-                                                        </div>
-                                                    </div>
-                                                    <div class="feed-item-list">
-                                                        <div class="d-flex">
-                                                            <div class="flex-grow-1 overflow-hidden me-4">
-                                                                <h5 class="font-size-15 mb-1 text-truncate">Have 1
-                                                                    pending order.</h5>
-                                                                <p class="text-truncate text-muted mb-2">2 hour ago</p>
-                                                            </div>
-                                                            <div class="flex-shrink-0 text-end">
-                                                                <h5 class="mb-1 font-size-15">Nov 04</h5>
-                                                                <p class="text-muted mb-0">6 hour ago</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-
-                                                <li class="checkout-item crypto-activity">
-                                                    <div class="avatar checkout-icon">
-                                                        <div class="avatar-title rounded-circle bg-primary">
-                                                            <i class="mdi mdi-weight text-white font-size-20"></i>
-                                                        </div>
-                                                    </div>
-                                                    <div class="feed-item-list">
-                                                        <div class="d-flex">
-                                                            <div class="flex-grow-1 overflow-hidden me-4">
-                                                                <h5 class="font-size-15 mb-1 text-truncate">Order
-                                                                    Received</h5>
-                                                                <p class="text-truncate text-muted mb-2">Received</p>
-                                                            </div>
-                                                            <div class="flex-shrink-0 text-end">
-                                                                <h5 class="mb-1 font-size-15">Nov 04</h5>
-                                                                <p class="text-muted mb-0">Today</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-
-                                            </ol>
-                                        </div>
-                                    </div>
-
-                                    <div id="chart-area" data-colors='["--bs-primary"]' class="apex-charts"></div>
-
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
-                <div class="col-xl-5">
+                <div class="col-xl-8">
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex align-items-start">
@@ -517,20 +364,14 @@
                                                         <span class="badge bg-success">Sale</span>
                                                     </div>
                                                     <div class="dash-product-img">
-                                                        <img src="assets/images/product/img-1.png" class="img-fluid"
-                                                             alt="">
+                                                        <img src="assets/images/product/img-1.png" class="img-fluid" alt="">
                                                     </div>
 
                                                     <h5 class="font-size-17 mt-1">
-                                                        <a href="ecommerce-product-detail.html"
-                                                           class="text-dark lh-base">Stylish Cricket & Walking Light
-                                                            Weight Shoes</a>
+                                                        <a href="ecommerce-product-detail.html" class="text-dark lh-base">Stylish Cricket & Walking Light Weight Shoes</a>
                                                     </h5>
 
-                                                    <h5 class="font-size-20 text-primary mt-3 mb-0">
-                                                        <del class="font-size-17 text-muted fw-normal me-1">$280</del>
-                                                        $140.00
-                                                    </h5>
+                                                    <h5 class="font-size-20 text-primary mt-3 mb-0"><del class="font-size-17 text-muted fw-normal me-1">$280</del> $140.00</h5>
 
                                                     <div class="font-size-16">
                                                         <i class="mdi mdi-star text-warning"></i>
@@ -540,9 +381,7 @@
                                                     </div>
 
                                                     <div class="mt-4">
-                                                        <a href="ecommerce-product-detail.html"
-                                                           class="btn btn-primary btn-sm w-lg"><i
-                                                                    class="mdi mdi-cart me-1 align-middle"></i> Buy
+                                                        <a href="ecommerce-product-detail.html" class="btn btn-primary btn-sm w-lg"><i class="mdi mdi-cart me-1 align-middle"></i> Buy
                                                             Now</a>
                                                     </div>
                                                 </div>
@@ -553,20 +392,14 @@
                                             <div class="card dash-product-box shadow-none border mb-0">
                                                 <div class="card-body">
                                                     <div class="dash-product-img">
-                                                        <img src="assets/images/product/img-2.png" class="img-fluid"
-                                                             alt="">
+                                                        <img src="assets/images/product/img-2.png" class="img-fluid" alt="">
                                                     </div>
 
                                                     <h5 class="font-size-17 mt-1">
-                                                        <a href="ecommerce-product-detail.html"
-                                                           class="text-dark lh-base">Combo Pack of 2 Sports Shoes
-                                                            Running Shoes</a>
+                                                        <a href="ecommerce-product-detail.html" class="text-dark lh-base">Combo Pack of 2 Sports Shoes Running Shoes</a>
                                                     </h5>
 
-                                                    <h5 class="font-size-20 text-primary mt-3 mb-0">
-                                                        <del class="font-size-17 text-muted fw-normal me-1">$320</del>
-                                                        $280.00
-                                                    </h5>
+                                                    <h5 class="font-size-20 text-primary mt-3 mb-0"><del class="font-size-17 text-muted fw-normal me-1">$320</del> $280.00</h5>
 
                                                     <div class="font-size-16">
                                                         <i class="mdi mdi-star text-warning"></i>
@@ -576,9 +409,7 @@
                                                     </div>
 
                                                     <div class="mt-4">
-                                                        <a href="ecommerce-product-detail.html"
-                                                           class="btn btn-primary btn-sm w-lg"><i
-                                                                    class="mdi mdi-cart me-1 align-middle"></i> Buy
+                                                        <a href="ecommerce-product-detail.html" class="btn btn-primary btn-sm w-lg"><i class="mdi mdi-cart me-1 align-middle"></i> Buy
                                                             Now</a>
                                                     </div>
                                                 </div>
@@ -589,20 +420,14 @@
                                             <div class="card dash-product-box shadow-none border mb-0">
                                                 <div class="card-body">
                                                     <div class="dash-product-img">
-                                                        <img src="assets/images/product/img-3.png" class="img-fluid"
-                                                             alt="">
+                                                        <img src="assets/images/product/img-3.png" class="img-fluid" alt="">
                                                     </div>
 
                                                     <h5 class="font-size-17 mt-1">
-                                                        <a href="ecommerce-product-detail.html"
-                                                           class="text-dark lh-base">Trendy Men Sports Running Running
-                                                            Shoes</a>
+                                                        <a href="ecommerce-product-detail.html" class="text-dark lh-base">Trendy Men Sports Running Running Shoes</a>
                                                     </h5>
 
-                                                    <h5 class="font-size-20 text-primary mt-3 mb-0">
-                                                        <del class="font-size-17 text-muted fw-normal me-1">$740</del>
-                                                        $520.00
-                                                    </h5>
+                                                    <h5 class="font-size-20 text-primary mt-3 mb-0"><del class="font-size-17 text-muted fw-normal me-1">$740</del> $520.00</h5>
 
                                                     <div class="font-size-16">
                                                         <i class="mdi mdi-star text-warning"></i>
@@ -612,9 +437,7 @@
                                                     </div>
 
                                                     <div class="mt-4">
-                                                        <a href="ecommerce-product-detail.html"
-                                                           class="btn btn-primary btn-sm w-lg"><i
-                                                                    class="mdi mdi-cart me-1 align-middle"></i> Buy
+                                                        <a href="ecommerce-product-detail.html" class="btn btn-primary btn-sm w-lg"><i class="mdi mdi-cart me-1 align-middle"></i> Buy
                                                             Now</a>
                                                     </div>
                                                 </div>
@@ -625,20 +448,14 @@
                                             <div class="card dash-product-box shadow-none border mb-0">
                                                 <div class="card-body">
                                                     <div class="dash-product-img">
-                                                        <img src="assets/images/product/img-6.png" class="img-fluid"
-                                                             alt="">
+                                                        <img src="assets/images/product/img-6.png" class="img-fluid" alt="">
                                                     </div>
 
                                                     <h5 class="font-size-17 mt-1">
-                                                        <a href="ecommerce-product-detail.html"
-                                                           class="text-dark lh-base">Sneakers For Women Sports Running
-                                                            Shoes (Blue)</a>
+                                                        <a href="ecommerce-product-detail.html" class="text-dark lh-base">Sneakers For Women Sports Running Shoes (Blue)</a>
                                                     </h5>
 
-                                                    <h5 class="font-size-20 text-primary mt-3 mb-0">
-                                                        <del class="font-size-17 text-muted fw-normal me-1">$530</del>
-                                                        $420.00
-                                                    </h5>
+                                                    <h5 class="font-size-20 text-primary mt-3 mb-0"><del class="font-size-17 text-muted fw-normal me-1">$530</del> $420.00</h5>
 
                                                     <div class="font-size-16">
                                                         <i class="mdi mdi-star text-warning"></i>
@@ -648,9 +465,7 @@
                                                     </div>
 
                                                     <div class="mt-4">
-                                                        <a href="ecommerce-product-detail.html"
-                                                           class="btn btn-primary btn-sm w-lg"><i
-                                                                    class="mdi mdi-cart me-1 align-middle"></i> Buy
+                                                        <a href="ecommerce-product-detail.html" class="btn btn-primary btn-sm w-lg"><i class="mdi mdi-cart me-1 align-middle"></i> Buy
                                                             Now</a>
                                                     </div>
                                                 </div>
@@ -667,42 +482,9 @@
             </div> <!-- end row -->
 
             <div class="row">
-                <div class="col-xl-4">
-                    <div class="card">
-                        <div class="card-body pb-0">
-                            <div class="d-flex align-items-start">
-                                <div class="flex-grow-1">
-                                    <h5 class="card-title">Sales Revenue</h5>
-                                </div>
-                                <div class="flex-shrink-0">
-                                    <div class="dropdown">
-                                        <a class="dropdown-toggle text-reset" href="#" data-bs-toggle="dropdown"
-                                           aria-haspopup="true" aria-expanded="false">
-                                            <span class="fw-semibold">Year:</span> <span
-                                                    class="text-muted">2022<i
-                                                        class="mdi mdi-chevron-down ms-1"></i></span>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-end">
-                                            <a class="dropdown-item" href="#">2019</a>
-                                            <a class="dropdown-item" href="#">2020</a>
-                                            <a class="dropdown-item" href="#">2021</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="mt-3">
-                                <div id="world-map-markers" style="height: 230px;"></div>
-                            </div>
 
-                            <div>
-                                <div id="sales-countries" class="apex-charts" dir="ltr"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xl-8">
+                <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body pb-3">
                             <div class="d-flex align-items-start">
@@ -964,4 +746,37 @@
 @section('script')
     <script src="{{ asset('assets/libs/imask/imask.min.js') }}"></script>
     <script src="{{ asset('assets/js/pages/form-mask.init.js:1') }}"></script>
+
+    <script>
+        var dataMonths = document.getElementById('data-months');
+
+        var dataProfits = document.getElementById('data-profits');
+
+        var profits = JSON.parse(dataProfits.getAttribute('profits'));
+
+        var months = JSON.parse(dataMonths.getAttribute('months'));
+
+
+        options = {
+            chart: { height: 410, type: "bar", toolbar: { show: !1 } },
+            plotOptions: { bar: { borderRadius: 3, horizontal: !1, columnWidth: "64%", endingShape: "rounded" } },
+            dataLabels: { enabled: !1 },
+            stroke: { show: !0, width: 2, colors: ["transparent"] },
+            series: [
+                { name: "Net Profit", data: profits }
+            ],
+            colors: chartBarColors = getChartColorsArray("column_chart_two"),
+            xaxis: { categories: months },
+            grid: { borderColor: "#f1f1f1" },
+            fill: { opacity: 1 },
+            legend: { show: !1 },
+            tooltip: { y: { formatter: function (e) { return "$ " + e + " thousands" } } }
+        };
+
+
+        chart = new ApexCharts(document.querySelector("#column_chart_two"), options);
+        chart.render();
+
+    </script>
+
 @endsection

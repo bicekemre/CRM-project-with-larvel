@@ -1,4 +1,9 @@
 @extends('layout.main')
+@section('page-name', 'Products')
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="/accounting">Accounting</a></li>
+@endsection
+@section('active-page', 'Products')
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
@@ -22,7 +27,8 @@
                                     </div>
                                 </div><!-- end col-->
                             </div>
-
+                            <form action="/products/delete" method="POST">
+                                @csrf
                             <div class="table-responsive">
                                 <table class="table align-middle table-nowrap">
                                     <thead>
@@ -72,23 +78,36 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <ul class="pagination pagination-rounded justify-content-end mb-2">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="javascript: void(0);" aria-label="Previous">
-                                        <i class="mdi mdi-chevron-left"></i>
-                                    </a>
-                                </li>
-                                <li class="page-item active"><a class="page-link" href="javascript: void(0);">1</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">2</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">3</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">4</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">5</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="javascript: void(0);" aria-label="Next">
-                                        <i class="mdi mdi-chevron-right"></i>
-                                    </a>
-                                </li>
-                            </ul>
+                            <div class="row mb-2">
+                                <div class="col-sm-4">
+                                    <button type="submit" class="btn btn-danger mb-4" id="deleteSelectedExpenses">
+                                        <i class="mdi mdi-delete me-1"></i> Delete Selected
+                                    </button>
+                                </div>
+                                <div class="col-sm-8">
+                                    <ul class="pagination pagination-rounded justify-content-end mb-2">
+                                        <li class="page-item {{ $products->currentPage() == 1 ? 'disabled' : '' }}">
+                                            <a class="page-link" href="{{ $products->previousPageUrl() }}" aria-label="Previous">
+                                                <i class="mdi mdi-chevron-left"></i>
+                                            </a>
+                                        </li>
+
+                                        @foreach ($products->getUrlRange(1, $products->lastPage()) as $page => $url)
+                                            <li class="page-item {{ $products->currentPage() == $page ? 'active' : '' }}">
+                                                <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                                            </li>
+                                        @endforeach
+
+                                        <li class="page-item {{ $products->currentPage() == $products->lastPage() ? 'disabled' : '' }}">
+                                            <a class="page-link" href="{{ $products->nextPageUrl() }}" aria-label="Next">
+                                                <i class="mdi mdi-chevron-right"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -99,7 +118,7 @@
                 <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="addInvoiceModalLabel">Add products</h5>
+                            <h5 class="modal-title" id="addInvoiceModalLabel">Add Refund</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body p-4">

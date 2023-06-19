@@ -1,4 +1,8 @@
 @extends('layout.main')
+@section('page-name', $type . '-create')
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="/{{ $type }}">{{ $type }}</a></li>
+@endsection
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
@@ -10,33 +14,33 @@
                         </div>
                         <!-- end card header -->
                         <div class="card-body">
-                            <form action="/client-create/{{ $type }}" method="POST" autocomplete="off" novalidate>
+                            <form action="/client-create/{{ $type }}" class="needs-validation" method="POST" autocomplete="off" novalidate>
                                 @method('POST')
                                 @csrf
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="mb-3">
                                             <label for="name" class="form-label">Name</label>
-                                            <input type="text" class="form-control" id="name" name="name">
+                                            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" required>
+                                            <div class="valid-feedback">
+                                                Looks good!
+                                            </div>
                                             @error('name')
-                                            <span class="text-danger">{{$message}}</span>
+                                            <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
 
                                         <div class="mb-3">
                                             <label for="phone-mask" class="form-label">Phone</label>
-                                            <input type="text" class="form-control" id="phone-mask" name="phone">
-                                            @error('phone')
-                                            <span class="text-danger">{{$message}}</span>
-                                            @enderror
+                                            <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone-mask" name="phone" required>
+                                            <div class="valid-feedback alert-danger">
+                                                This area must be numeric
+                                            </div>
                                         </div>
 
                                         <div class="mb-3">
                                             <label for="email-input" class="form-label">Email</label>
-                                            <input class="form-control" type="email" id="email-input" name="email">
-                                            @error('email')
-                                            <span class="text-danger">{{$message}}</span>
-                                            @enderror
+                                            <input class="form-control @error('email') is-invalid @enderror" type="email" id="email-input" name="email">
                                         </div>
 
                                         <div class="mb-3">
@@ -59,14 +63,6 @@
                                             <input type="text" class="form-control" id="address" name="address">
                                         </div>
                                         <input type="hidden" name="type" value="{{ $type }}">
-{{--                                        <div class="mb-3">--}}
-{{--                                            <label class="form-label">Type</label>--}}
-{{--                                            <select name="type" class="form-select">--}}
-{{--                                                <option value="null">Select</option>--}}
-{{--                                                <option value="client">Client</option>--}}
-{{--                                                <option value="lead">Lead</option>--}}
-{{--                                            </select>--}}
-{{--                                        </div>--}}
                                         <div class="mb-3">
                                             <label class="form-label">Source</label>
                                             <select name="id_source" class="form-select">
@@ -94,6 +90,7 @@
                                 </div>
                                 <!-- end row -->
                             </form>
+
                             <!-- end form -->
                         </div>
                         <!-- end card body -->
@@ -111,4 +108,6 @@
 @section('script')
     <script src="{{ asset('assets/libs/imask/imask.min.js') }}"></script>
     <script src="{{ asset('assets/js/pages/form-mask.init.js') }}"></script>
+    <script src="{{ asset('assets/js/pages/form-validation.init.js') }}"></script>
+
 @endsection

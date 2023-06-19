@@ -1,4 +1,6 @@
 @extends('layout.main')
+@section('page-name', 'Users')
+
 @section('content')
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
@@ -11,11 +13,11 @@
                 <div class="col-lg-8">
                     <div class="card">
                         <div class="card-header d-flex align-items-center">
-                            <h4 class="card-title">Create Client</h4>
+                            <h4 class="card-title">Update Expense</h4>
                         </div>
                         <!-- end card header -->
                         <div class="card-body">
-                            <form action="{{ route('expense.update', $expense->id) }}" method="POST">
+                            <form action="{{ route('expense.update', $expense->id) }}"class="needs-validation" method="POST" autocomplete="off" novalidate>
                                 @method('PUT')
                                 @csrf
                                 <input type="hidden" value="">
@@ -23,18 +25,12 @@
                                     <div class="col-lg-6">
                                         <div class="mb-3">
                                             <label for="name" class="form-label">Amount</label>
-                                            <input type="text" class="form-control" id="name" value="{{ $expense->amount }}" name="amount">
-                                            @error('amount')
-                                            <span class="text-danger">{{$message}}</span>
-                                            @enderror
+                                            <input type="text" class="form-control @error('amount') is_invalid @enderror " id="name" value="{{ $expense->amount }}" name="amount" required>
                                         </div>
 
                                         <div class="mb-3">
                                             <label for="email-input" class="form-label">Description</label>
                                             <input class="form-control" type="text" id="email-input" value="{{ $expense->desc }}" name="desc">
-                                            @error('desc')
-                                            <span class="text-danger">{{$message}}</span>
-                                            @enderror
                                         </div>
 
                                         <div class="mb-3">
@@ -58,7 +54,7 @@
                                         <div class="mb-3">
                                             <label class="form-label">Payment type :</label>
                                             <select name="payment" class="form-select">
-                                                <option selected>Select Payment method</option>
+                                                <option value="" selected>Select Payment method</option>
                                                 <option value="CR">Credit / Debit Card</option>
                                                 <option value="PY">Paypal</option>
                                                 <option value="CA">Cash</option>
@@ -89,4 +85,5 @@
     <!-- form mask -->
     <script src="{{ asset('assets/libs/imask/imask.min.js') }}"></script>
     <script src="{{ asset('assets/js/pages/form-mask.init.js') }}"></script>
+    <script src="{{ asset('assets/js/pages/form-validation.init.js') }}"></script>
 @endsection

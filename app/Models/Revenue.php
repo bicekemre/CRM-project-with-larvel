@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -44,5 +45,13 @@ class Revenue extends Model
         return $this->belongsTo(Invoice::class, 'id_invoice', 'id');
     }
 
-
+    public function rules()
+    {
+        return [
+            'amount'  => 'required|numeric',
+            'id_service'  => 'required',
+            'id_client' => 'required',
+            'date'  => 'required|date',
+        ];
+    }
 }

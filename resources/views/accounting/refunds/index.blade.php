@@ -1,4 +1,8 @@
 @extends('layout.main')
+@section('page-name', 'Refunds')
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="/accounting">Accounting</a></li>
+@endsection
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
@@ -10,7 +14,7 @@
                             <div class="row align-items-start">
                                 <div class="col-sm">
                                     <div>
-                                        <button type="button" class="btn btn-light mb-4" data-bs-toggle="modal" data-bs-target="#addInvoiceModal"><i class="mdi mdi-plus me-1"></i> Add Invoice</button>
+                                        <button type="button" class="btn btn-light mb-4" data-bs-toggle="modal" data-bs-target="#addInvoiceModal"><i class="mdi mdi-plus me-1"></i> Add Refund</button>
                                     </div>
                                 </div>
                                 <div class="col-sm-auto">
@@ -29,7 +33,8 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <form action="/refunds/delete" method="POST">
+                                @csrf
                             <div class="table-responsive mt-4 mt-sm-0">
                                 <table class="table align-middle table-nowrap table-check">
                                     <thead>
@@ -87,39 +92,36 @@
                                 </table><!-- end table -->
                             </div>
 
-                            <div class="row g-0 text-center text-sm-start">
-                                <div class="col-sm-6">
-                                    <div>
-                                        <p class="mb-sm-0">Showing 1 to 10 of 57 entries</p>
-                                    </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-4">
+                                    <button type="submit" class="btn btn-danger mb-4" id="deleteSelectedExpenses">
+                                        <i class="mdi mdi-delete me-1"></i> Delete Selected
+                                    </button>
                                 </div>
-                                <!-- end col -->
-                                <div class="col-sm-6">
-                                    <ul class="pagination pagination-rounded justify-content-center justify-content-sm-end mb-sm-0">
-                                        <li class="page-item disabled">
-                                            <a href="#" class="page-link"><i class="mdi mdi-chevron-left"></i></a>
+                                <div class="col-sm-8">
+                                    <ul class="pagination pagination-rounded justify-content-end mb-2">
+                                        <li class="page-item {{ $refunds->currentPage() == 1 ? 'disabled' : '' }}">
+                                            <a class="page-link" href="{{ $refunds->previousPageUrl() }}" aria-label="Previous">
+                                                <i class="mdi mdi-chevron-left"></i>
+                                            </a>
                                         </li>
-                                        <li class="page-item">
-                                            <a href="#" class="page-link">1</a>
-                                        </li>
-                                        <li class="page-item active">
-                                            <a href="#" class="page-link">2</a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a href="#" class="page-link">3</a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a href="#" class="page-link">4</a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a href="#" class="page-link">5</a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a href="#" class="page-link"><i class="mdi mdi-chevron-right"></i></a>
+
+                                        @foreach ($refunds->getUrlRange(1, $refunds->lastPage()) as $page => $url)
+                                            <li class="page-item {{ $refunds->currentPage() == $page ? 'active' : '' }}">
+                                                <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                                            </li>
+                                        @endforeach
+
+                                        <li class="page-item {{ $refunds->currentPage() == $refunds->lastPage() ? 'disabled' : '' }}">
+                                            <a class="page-link" href="{{ $refunds->nextPageUrl() }}" aria-label="Next">
+                                                <i class="mdi mdi-chevron-right"></i>
+                                            </a>
                                         </li>
                                     </ul>
-                                </div><!-- end col -->
-                            </div><!-- end row -->
+                                </div>
+
+                            </div>
+                            </form>
                         </div>
                         <!-- end card body -->
                     </div>
@@ -138,7 +140,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body p-4">
-                            <form action="{{ route('refund.create') }}" method="POST">
+                            <form action="/refund/create" method="POST">
                                 @method('POST')
                                 @csrf
                                 <div>
@@ -160,14 +162,6 @@
                                             </div>
                                         </li>
 
-                                        <li class="wizard-list-item">
-                                            <div class="list-item">
-                                                <div class="step-icon" data-bs-toggle="tooltip" data-bs-placement="top"
-                                                     title="Order Summery">
-                                                    <i class="uil uil-clipboard-notes"></i>
-                                                </div>
-                                            </div>
-                                        </li>
                                     </ul>
                                     <!-- wizard-nav -->
 
@@ -233,125 +227,10 @@
                                     </div>
                                     <!-- wizard-tab -->
 
-                                    <div class="wizard-tab">
-                                        <div class="text-center mb-4">
-                                            <h5>Order Summery</h5>
-                                            <p class="card-title-desc">Fill Order Summery Details.</p>
-                                        </div>
-                                        <div>
-                                            <div class="table-responsive">
-                                                <table class="table table-nowrap">
-                                                    <thead>
-                                                    <tr>
-                                                        <th scope="col">#</th>
-                                                        <th scope="col">Item name</th>
-                                                        <th scope="col">Description</th>
-                                                        <th scope="col" width="120px">Price</th>
-                                                        <th scope="col" width="120px">Quantity</th>
-                                                        <th scope="col" width="120px">Total</th>
-                                                        <th scope="col" class="text-center">Action</th>
-                                                    </tr>
-
-                                                    </thead>
-                                                    <tbody>
-                                                    <tr>
-                                                        <th scope="row">1</th>
-                                                        <td>
-                                                            <div>
-                                                                <input class="form-control" type="text">
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div>
-                                                                <textarea class="form-control" rows="2"></textarea>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div>
-                                                                <input class="form-control" type="text">
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div>
-                                                                <input class="form-control" type="text">
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div>
-                                                                <input class="form-control" type="text"  value="0.00" readonly>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="text-center">
-                                                                <a href="#" class="text-danger p-2 d-inline-block" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <th scope="row">2</th>
-                                                        <td>
-                                                            <div>
-                                                                <input class="form-control" type="text">
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div>
-                                                                <textarea class="form-control" rows="2"></textarea>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div>
-                                                                <input class="form-control" type="text">
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div>
-                                                                <input class="form-control" type="text">
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div>
-                                                                <input class="form-control" type="text"  value="0.00" readonly>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="text-center">
-                                                                <a href="#" class="text-danger p-2 d-inline-block" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <div class="row justify-content-end">
-                                                <div class="col-xl-3 col-md-4">
-                                                    <div>
-                                                        <div>
-                                                            <h5 class="font-size-14 py-2">Sub Total : <span class="float-end fw-normal text-body">0.00</span></h5>
-                                                        </div>
-                                                        <div>
-                                                            <h5 class="font-size-14 py-2">Discount  : <span class="float-end fw-normal text-body"> - 0.00</span></h5>
-                                                        </div>
-                                                        <div>
-                                                            <h5 class="font-size-14 py-2">Shipping Charge  : <span class="float-end fw-normal text-body"> 0.00</span></h5>
-                                                        </div>
-                                                        <div>
-                                                            <h5 class="font-size-14 py-2">Tax  : <span class="float-end fw-normal text-body"> 0.00</span></h5>
-                                                        </div>
-                                                        <div>
-                                                            <h5 class="font-size-14 py-2">Total  : <span class="float-end"> 0.00</span></h5>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- wizard-tab -->
-
                                     <div class="d-flex align-items-start gap-3 mt-4">
-                                        <button type="button" class="btn btn-primary w-sm" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
-                                        <button type="button" class="btn btn-primary w-sm ms-auto" id="nextBtn" onclick="nextPrev(1)">Next</button>
+                                        <button type="button" class="btn btn-primary w-sm" id="prevBtn">Previous</button>
+                                        <button type="button" class="btn btn-primary w-sm ms-auto" id="nextBtn">Next</button>
+                                        <button type="submit" class="btn btn-primary w-sm ms-auto d-none" id="addBtn">Add</button>
                                     </div>
                                 </div>
                             </form>

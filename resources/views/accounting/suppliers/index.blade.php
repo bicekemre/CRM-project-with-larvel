@@ -1,4 +1,8 @@
 @extends('layout.main')
+@section('page-name', 'Suppliers')
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="/accounting">Accounting</a></li>
+@endsection
 @section('content')
     <div class="page-content">
         <div class="container-fluid">

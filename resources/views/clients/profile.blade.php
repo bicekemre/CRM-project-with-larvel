@@ -1,4 +1,8 @@
 @extends('layout.main')
+@section('page-name', 'Clients-Profile ' . $client->name)
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="/clients">Clients</a></li>
+@endsection
 @section('content')
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
@@ -138,14 +142,14 @@
                                     </tr>
                                     <tr>
                                         <th scope="row">Source</th>
-                                        <td>{{ $client->source->name }}</td>
+                                        <td>{{ $client->source->name ?? ''}}</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Service</th>
                                         <td><span class="badge badge-soft-primary font-size-12">{{ $client->service->name ?? ''}}</span></td>
                                     </tr>
                                     <tr>
-                                        <th scope="row">Service</th>
+                                        <th scope="row">Staff Sales</th>
                                         <td><span class="badge badge-soft-primary font-size-12">{{ $client->staff->name ?? ''}}</span></td>
                                     </tr>
                                     </tbody>
@@ -260,7 +264,7 @@
                                                 <div class="col-6 offset-3 mb-3">
                                                     <label class="form-label">Service</label>
                                                     <select name="id_service" class="form-select">
-                                                        <option value="{{ $client->service->id ?? null }}">{{ $client->service->name }}</option>
+                                                        <option value="{{ $client->service->id ?? null }}">{{ $client->service->name ?? ''}}</option>
                                                         @isset($services)
                                                             @foreach($services as $service)
                                                                 <option value="{{ $service->id }}">{{ $service->name }}</option>

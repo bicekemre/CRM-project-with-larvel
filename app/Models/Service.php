@@ -29,7 +29,7 @@ class Service extends Model
     {
         $role = Role::where(['name' => 'admin'])->get()->first();
 
-        $roleId = $role->id;
+        $roleId = $role->id ?? null;
 
         return $this->belongsToMany(User::class)->whereHas('roles', function ($query) use ($roleId) {
             $query->where('id', $roleId);

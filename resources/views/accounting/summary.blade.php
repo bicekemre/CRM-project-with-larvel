@@ -1,4 +1,8 @@
 @extends('layout.main')
+@section('page-name', 'Summary')
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="/accounting">Accounting</a></li>
+@endsection
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
@@ -84,6 +88,28 @@
                                     @endisset
                                     </tbody>
                                 </table><!-- end table -->
+                                <div class="row mb-2 mt-2">
+                                    <div class="col-sm-8">
+                                        <ul class="pagination pagination-rounded justify-content-end mb-2">
+                                            <li class="page-item {{ $revenues->currentPage() == 1 ? 'disabled' : '' }}">
+                                                <a class="page-link" href="{{ $revenues->previousPageUrl() }}" aria-label="Previous">
+                                                    <i class="mdi mdi-chevron-left"></i>
+                                                </a>
+                                            </li>
+                                            @foreach ($revenues->getUrlRange(1, $revenues->lastPage()) as $page => $url)
+                                                <li class="page-item {{ $revenues->currentPage() == $page ? 'active' : '' }}">
+                                                    <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                                                </li>
+                                            @endforeach
+                                            <li class="page-item {{ $revenues->currentPage() == $revenues->lastPage() ? 'disabled' : '' }}">
+                                                <a class="page-link" href="{{ $revenues->nextPageUrl() }}" aria-label="Next">
+                                                    <i class="mdi mdi-chevron-right"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                </div>
                             </div><!-- end table responsive -->
                         </div><!-- end card body -->
                     </div><!-- end card -->
@@ -120,6 +146,28 @@
                                     @endisset
                                     </tbody>
                                 </table><!-- end table -->
+                                <div class="row mb-2 mt-2">
+                                    <div class="col-sm-8">
+                                        <ul class="pagination pagination-rounded justify-content-end mb-2">
+                                            <li class="page-item {{ $expenses->currentPage() == 1 ? 'disabled' : '' }}">
+                                                <a class="page-link" href="{{ $expenses->previousPageUrl() }}" aria-label="Previous">
+                                                    <i class="mdi mdi-chevron-left"></i>
+                                                </a>
+                                            </li>
+                                            @foreach ($expenses->getUrlRange(1, $expenses->lastPage()) as $page => $url)
+                                                <li class="page-item {{ $expenses->currentPage() == $page ? 'active' : '' }}">
+                                                    <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                                                </li>
+                                            @endforeach
+                                            <li class="page-item {{ $expenses->currentPage() == $expenses->lastPage() ? 'disabled' : '' }}">
+                                                <a class="page-link" href="{{ $expenses->nextPageUrl() }}" aria-label="Next">
+                                                    <i class="mdi mdi-chevron-right"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                </div>
                             </div><!-- end table responsive -->
                         </div><!-- end card body -->
                     </div><!-- end card -->

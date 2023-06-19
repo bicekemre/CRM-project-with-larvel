@@ -10,7 +10,7 @@ class RefundController extends Controller
 {
     public function  index()
     {
-        $refunds = Refund::all();
+        $refunds = Refund::paginate(10);
 
         $clients = Client::all();
 
@@ -55,15 +55,21 @@ class RefundController extends Controller
             ->withInput($request->except(['password']));
     }
 
-    public function delete($id)
+    public function delete($id = null, Request $request = null)
     {
-        $refund = Refund::find($id);
+        if ($id) {
+            $selected = [$id];
+        } else {
+            $selected = $request->id;
+        }
 
-        $refund->delete();
+        if ($selected) {
+            Refund::whereIn('id', $selected)->delete();
 
-        return redirect()
-            ->route('refunds')
-            ->with('success', ' deleted successfully.');
+            return redirect()->route('refunds')->with('success', 'Selected items have been deleted successfully.');
+        }
+
+        return redirect()->route('refunds')->with('error', 'No items selected or an error occurred.');
     }
 
 

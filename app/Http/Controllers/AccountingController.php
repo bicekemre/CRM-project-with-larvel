@@ -19,9 +19,9 @@ class AccountingController extends Controller
 
     public function  summary()
     {
-        $expenses = Expense::all();
+        $expenses = Expense::paginate(10);
 
-        $revenues = Revenue::all();
+        $revenues = Revenue::paginate(10);
 
         $profits = Revenue::getProfits();
 
@@ -34,7 +34,7 @@ class AccountingController extends Controller
 
     public function  invoices()
     {
-        $invoices = Invoice::all();
+        $invoices = Invoice::paginate(10);
 
         return view('accounting.invoices', compact('invoices'));
     }

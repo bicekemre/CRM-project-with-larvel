@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\Expense;
 use App\Models\Service;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ class ExpenseController extends Controller
 
     public function  index()
     {
-        $expenses = Expense::all();
+        $expenses = Expense::paginate(10);
 
         $services = Service::all();
 
@@ -42,13 +43,16 @@ class ExpenseController extends Controller
     {
         $expense = Expense::find($id);
 
+
         $expense->update([
             'amount' => $request->amount,
             'id_service' => $request->id_service,
             'desc' => $request->desc,
             'payment' => $request->payment,
             'payment_date' => $request->payment_date,
-        ])->save();
+        ]);
+
+        $expense->save();
 
         return redirect()
             ->route('expenses')
@@ -56,17 +60,22 @@ class ExpenseController extends Controller
             ->withInput($request->except(['password']));
     }
 
-    public function delete($id)
+    public function delete(Request $request, $id = null)
     {
-        $expense = Expense::find($id);
+        $selected = [];
 
-        $expense->delete();
+        if ($id) {
+            $selected[] = $id;
+        } else {
+            $selected = $request->id;
+        }
 
-        return redirect()
-            ->route('expenses')
-            ->with('success', ' deleted successfully.');
+        if ($selected) {
+            Expense::whereIn('id', $selected)->delete();
+
+            return redirect()->route('expenses')->with('success', 'Selected items have been deleted successfully.');
+        }
+
+        return redirect()->route('expenses')->with('error', 'No items selected or an error occurred.');
     }
-
-
-
 }

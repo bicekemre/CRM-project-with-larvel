@@ -1,5 +1,5 @@
-<link href="{{ asset('assets/libs/fullcalendar/main.min.css') }}" rel="stylesheet" type="text/css" />
 @extends('layout.main')
+@section('page-name', 'Calender')
 @section('content')
     <div class="main-content">
 
@@ -25,7 +25,7 @@
                                             </div>
                                             <div class="external-event fc-event bg-warning" data-class="bg-warning">
                                                 <i class="mdi mdi-checkbox-blank-circle font-size-11 me-2"></i>Generating Reports
-                                            </div>
+                                            </div><
                                             <div class="external-event fc-event bg-danger" data-class="bg-danger">
                                                 <i class="mdi mdi-checkbox-blank-circle font-size-11 me-2"></i>Create New theme
                                             </div>

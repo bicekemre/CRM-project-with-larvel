@@ -1,4 +1,9 @@
 @extends('layout.main')
+@section('page-name', 'Invoices-Update')
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="/accounting">Accounting</a></li>
+    <li class="breadcrumb-item"><a href="/invoices">Invoices</a></li>
+@endsection
 @section('content')
     @if ($message = Session::get('success'))
         <div class="alert alert-success">

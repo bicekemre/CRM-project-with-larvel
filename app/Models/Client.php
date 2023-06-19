@@ -31,6 +31,16 @@ class Client extends Model
         return $this->belongsTo(Service::class, 'id_service', 'id');
     }
 
+    public function getClientsByDate($startDate, $endDate)
+    {
+        return $this->whereBetween('updated_at', [
+            $startDate,
+            $endDate
+        ])->get();
+
+
+    }
+
 
     public function rules()
     {

@@ -9,9 +9,9 @@ use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
-    public function  dealWithoutIncomes()
+    public function dealWithoutIncomes()
     {
-        $revenues = Revenue::all();
+        $revenues = Revenue::paginate(10);
 
         $services = Service::all();
 
@@ -24,9 +24,9 @@ class PaymentController extends Controller
         ));
     }
 
-    public function  payments()
+    public function payments()
     {
-        $revenues = Revenue::all();
+        $revenues = Revenue::paginate(10);
 
         $clients = Client::all();
 
@@ -37,14 +37,14 @@ class PaymentController extends Controller
 
     public function waitingPaymentDeals()
     {
-        $revenues = Revenue::where(['payment_status' => 0])->get();
+        $revenues = Revenue::where(['payment_status' => 0])->paginate(10);
 
         return view('accounting.payments.waiting-payment-deals', compact('revenues'));
     }
 
     public function unpaidDeals()
     {
-        $revenues = Revenue::where(['payment_status' => 0])->get();
+        $revenues = Revenue::where(['payment_status' => 0])->paginate(10);
         return view('accounting.payments.unpaid-deals', compact('revenues'));
     }
 
@@ -82,7 +82,8 @@ class PaymentController extends Controller
             'desc' => $request->desc,
             'payment' => $request->payment,
             'payment_date' => $request->payment_date,
-        ])->save();
+        ]);
+        $revenue->save();
 
         return redirect()
             ->route('payments')
@@ -90,14 +91,22 @@ class PaymentController extends Controller
             ->withInput($request->except(['password']));
     }
 
-    public function delete($id)
+    public function delete(Request $request, $id = null)
     {
-        $revenue = Revenue::find($id);
+        $selected = [];
 
-        $revenue->delete();
+        if ($id) {
+            $selected[] = $id;
+        } else {
+            $selected = $request->id;
+        }
 
-        return redirect()
-            ->route('payments')
-            ->with('success', ' deleted successfully.');
+        if ($selected) {
+            Revenue::whereIn('id', $selected)->delete();
+
+            return redirect()->route('payments')->with('success', 'Selected items have been deleted successfully.');
+        }
+
+        return redirect()->route('payments')->with('error', 'No items selected or an error occurred.');
     }
 }

@@ -1,4 +1,8 @@
 @extends('layout.main')
+@section('page-name', 'Expenses')
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="/accounting">Accounting</a></li>
+@endsection
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
@@ -17,101 +21,131 @@
                                 </div>
                                 <div class="col-sm-8">
                                     <div class="text-sm-end">
-                                        <button type="button" class="btn btn-light mb-4" data-bs-toggle="modal" data-bs-target="#addInvoiceModal"><i class="mdi mdi-plus me-1"></i> Add Expense</button>
-
+                                        <button type="button" class="btn btn-light mb-4" data-bs-toggle="modal"
+                                                data-bs-target="#addInvoiceModal">
+                                            <i class="mdi mdi-plus me-1"></i> Add Expense
+                                        </button>
                                     </div>
-                                </div><!-- end col-->
+                                </div>
                             </div>
 
                             <div class="table-responsive">
-                                <table class="table align-middle table-nowrap">
-                                    <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Service</th>
-                                        <th>Payment Type</th>
-                                        <th>Payment Status</th>
-                                        <th>Payment Date</th>
-                                        <th>Created Date</th>
-                                        <th>Amount</th>
-                                        <th>Action</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @isset($expenses)
-                                        @foreach($expenses as $expense)
-                                            <tr>
-                                                <td>
-                                                    <div class="form-check font-size-16">
-                                                        <input class="form-check-input" type="checkbox"
-                                                               id="customerlistcheck01">
-                                                        <label class="form-check-label" for="customerlistcheck01"></label>
-                                                    </div>
-                                                </td>
-                                                <td>{{ $expense->service->name ?? ''}}</td>
-
-                                                <td>{{ $expense->payment }}</td>
-                                                <td>{{ $expense->is_paid }}</td>
-                                                <td>{{ $expense->payment_date}}</td>
-                                                <td>{{ $expense->created_at }}</td>
-                                                <td>${{ $expense->amount }}</td>
-                                                <td>
-                                                    <div class="dropdown">
-                                                        <a href="#" class="dropdown-toggle card-drop" data-bs-toggle="dropdown"
-                                                           aria-expanded="false">
-                                                            <i class="mdi mdi-dots-horizontal font-size-18"></i>
-                                                        </a>
-                                                        <ul class="dropdown-menu dropdown-menu-end">
-                                                            <li><a href="/expense/edit/{{ $expense->id }}" class="dropdown-item"><i
-                                                                            class="mdi mdi-pencil font-size-16 text-success me-1"></i>
-                                                                    Edit</a></li>
-                                                            <li><a href="/expense/delete/{{ $expense->id }}" class="dropdown-item"><i
-                                                                            class="mdi mdi-trash-can font-size-16 text-danger me-1"></i>
-                                                                    Delete</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    @endisset
-                                    </tbody>
-                                </table>
+                                <form action="{{ route('expenses.delete') }}" method="POST">
+                                    @method('POST')
+                                    @csrf
+                                    <table class="table align-middle table-nowrap">
+                                        <thead>
+                                        <tr>
+                                            <th>
+                                                <div class="form-check font-size-16">
+                                                    <input class="form-check-input" type="checkbox"
+                                                           id="selectAllExpenses">
+                                                    <label class="form-check-label" for="selectAllExpenses"></label>
+                                                </div>
+                                            </th>
+                                            <th>Service</th>
+                                            <th>Payment Type</th>
+                                            <th>Payment Status</th>
+                                            <th>Payment Date</th>
+                                            <th>Created Date</th>
+                                            <th>Amount</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @isset($expenses)
+                                            @foreach($expenses as $expense)
+                                                <tr>
+                                                    <td>
+                                                        <div class="form-check font-size-16">
+                                                            <input class="form-check-input expense-checkbox" type="checkbox"
+                                                                   value="{{ $expense->id }}" name="id[]"
+                                                                   id="expenseCheckbox{{ $expense->id }}">
+                                                            <label class="form-check-label"
+                                                                   for="expenseCheckbox{{ $expense->id }}"></label>
+                                                        </div>
+                                                    </td>
+                                                    <td>{{ $expense->service->name ?? ''}}</td>
+                                                    <td>{{ $expense->payment }}</td>
+                                                    <td>{{ $expense->is_paid }}</td>
+                                                    <td>{{ $expense->payment_date}}</td>
+                                                    <td>{{ $expense->created_at }}</td>
+                                                    <td>${{ $expense->amount }}</td>
+                                                    <td>
+                                                        <div class="dropdown">
+                                                            <a href="#" class="dropdown-toggle card-drop" data-bs-toggle="dropdown"
+                                                               aria-expanded="false">
+                                                                <i class="mdi mdi-dots-horizontal font-size-18"></i>
+                                                            </a>
+                                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                                <li><a href="/expense/edit/{{ $expense->id }}"
+                                                                       class="dropdown-item"><i
+                                                                                class="mdi mdi-pencil font-size-16 text-success me-1"></i>
+                                                                        Edit</a></li>
+                                                                <li><a href="/expense/delete/{{ $expense->id }}"
+                                                                       class="dropdown-item"><i
+                                                                                class="mdi mdi-trash-can font-size-16 text-danger me-1"></i>
+                                                                        Delete</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @endisset
+                                        </tbody>
+                                    </table>
+                                    <div class="row mb-2">
+                                        <div class="col-sm-4">
+                                            <button type="submit" class="btn btn-danger mb-4" id="deleteSelectedExpenses">
+                                                <i class="mdi mdi-delete me-1"></i> Delete Selected
+                                            </button>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <ul class="pagination pagination-rounded justify-content-end mb-2">
+                                                <li class="page-item {{ $expenses->currentPage() == 1 ? 'disabled' : '' }}">
+                                                    <a class="page-link" href="{{ $expenses->previousPageUrl() }}"
+                                                       aria-label="Previous">
+                                                        <i class="mdi mdi-chevron-left"></i>
+                                                    </a>
+                                                </li>
+                                                @foreach ($expenses->getUrlRange(1, $expenses->lastPage()) as $page => $url)
+                                                    <li class="page-item {{ $expenses->currentPage() == $page ? 'active' : '' }}">
+                                                        <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                                                    </li>
+                                                @endforeach
+                                                <li
+                                                        class="page-item {{ $expenses->currentPage() == $expenses->lastPage() ? 'disabled' : '' }}">
+                                                    <a class="page-link" href="{{ $expenses->nextPageUrl() }}"
+                                                       aria-label="Next">
+                                                        <i class="mdi mdi-chevron-right"></i>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                            <ul class="pagination pagination-rounded justify-content-end mb-2">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="javascript: void(0);" aria-label="Previous">
-                                        <i class="mdi mdi-chevron-left"></i>
-                                    </a>
-                                </li>
-                                <li class="page-item active"><a class="page-link" href="javascript: void(0);">1</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">2</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">3</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">4</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">5</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="javascript: void(0);" aria-label="Next">
-                                        <i class="mdi mdi-chevron-right"></i>
-                                    </a>
-                                </li>
-                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- end row -->
 
-            <div class="modal fade" id="addInvoiceModal" tabindex="-1" aria-labelledby="addInvoiceModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="addInvoiceModalLabel">Add Expense</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body p-4">
-                            <form  action="{{ route('expense.create') }}" method="post">
-                                @method('POST')
-                                @csrf
+            <!-- end row -->
+            <form action="{{ route('expense.create') }}" method="POST" class="needs-validation">
+                @method('POST')
+                @csrf
+
+                <!-- Modal -->
+                <div class="modal fade" id="addInvoiceModal" tabindex="-1" aria-labelledby="addInvoiceModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addInvoiceModalLabel">Add Expense</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body p-4">
                                 <div>
+                                    <!-- Wizard Navigation -->
                                     <ul class="wizard-nav mb-5">
                                         <li class="wizard-list-item">
                                             <div class="list-item">
@@ -129,18 +163,10 @@
                                                 </div>
                                             </div>
                                         </li>
-
-                                        <li class="wizard-list-item">
-                                            <div class="list-item">
-                                                <div class="step-icon" data-bs-toggle="tooltip" data-bs-placement="top"
-                                                     title="Order Summery">
-                                                    <i class="uil uil-clipboard-notes"></i>
-                                                </div>
-                                            </div>
-                                        </li>
                                     </ul>
-                                    <!-- wizard-nav -->
+                                    <!-- /Wizard Navigation -->
 
+                                    <!-- Wizard Tabs -->
                                     <div class="wizard-tab">
                                         <div class="text-center mb-4">
                                             <h5>Client and Service</h5>
@@ -150,23 +176,24 @@
                                             <div class="row">
                                                 <div class="col-6 offset-3 mb-3">
                                                     <label class="form-label">Service</label>
-                                                    <select name="id_service" class="form-select">
-                                                        <option value="">Select</option>
+                                                    <select name="id_service" required
+                                                            class="form-select  @error('id_service') is-invalid @enderror">
+                                                        <option>Select</option>
                                                         @isset($services)
                                                             @foreach($services as $service)
                                                                 <option value="{{ $service->id }}">{{ $service->name }}</option>
                                                             @endforeach
                                                         @endisset
                                                     </select>
+                                                    <div class="invalid-feedback">
+                                                        Please select!
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <!-- wizard-tab -->
-
                                     <div class="wizard-tab">
-
                                         <div class="text-center mb-4">
                                             <h5>Invoice Details</h5>
                                             <p class="card-title-desc">Fill Expense Details.</p>
@@ -175,16 +202,25 @@
                                             <div class="row">
                                                 <div class="col-lg-6">
                                                     <div class="mb-3">
-                                                        <label for="invoicenumberinput" class="form-label">Amount #</label>
-                                                        <input type="text" class="form-control" name="amount" id="invoicenumberinput">
+                                                        <label for="number-mask" class="form-label">Amount #</label>
+                                                        <input type="text"
+                                                               class="form-control @error('amount') is-invalid @enderror"
+                                                               name="amount" id="number-mask" required>
+                                                        <div class="invalid-feedback">
+                                                            This area must be numeric.
+                                                        </div>
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label for="invoicenumberinput" class="form-label">Installment #</label>
-                                                        <input type="text" class="form-control" name="installment" id="invoicenumberinput">
+                                                        <label for="invoicenumberinput" class="form-label">Installment
+                                                            #</label>
+                                                        <input type="text" class="form-control" name="installment"
+                                                               id="invoicenumberinput">
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label for="invoicedescriptioninput" class="form-label">Description (Optional)</label>
-                                                        <input type="text" class="form-control" name="desc" id="invoicedescriptioninput">
+                                                        <label for="invoicedescriptioninput" class="form-label">Description
+                                                            (Optional)</label>
+                                                        <input type="text" class="form-control" name="desc"
+                                                               id="invoicedescriptioninput">
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6">
@@ -199,142 +235,37 @@
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="payment_date" class="form-label">Payment Date</label>
-                                                        <input type="date" class="form-control" name="payment_date" id="payment_date">
+                                                        <input type="date"
+                                                               class="form-control @error('date') is-invalid @enderror"
+                                                               name="payment_date" id="payment_date" required>
+                                                    </div>
+                                                    <div class="invalid-feedback">
+                                                        This area must be numeric.
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- wizard-tab -->
+                                    <!-- /Wizard Tabs -->
 
-                                    <div class="wizard-tab">
-                                        <div class="text-center mb-4">
-                                            <h5>Order Summery</h5>
-                                            <p class="card-title-desc">Fill Order Summery Details.</p>
-                                        </div>
-                                        <div>
-                                            <div class="table-responsive">
-                                                <table class="table table-nowrap">
-                                                    <thead>
-                                                    <tr>
-                                                        <th scope="col">#</th>
-                                                        <th scope="col">Item name</th>
-                                                        <th scope="col">Description</th>
-                                                        <th scope="col" width="120px">Price</th>
-                                                        <th scope="col" width="120px">Quantity</th>
-                                                        <th scope="col" width="120px">Total</th>
-                                                        <th scope="col" class="text-center">Action</th>
-                                                    </tr>
-
-                                                    </thead>
-                                                    <tbody>
-                                                    <tr>
-                                                        <th scope="row">1</th>
-                                                        <td>
-                                                            <div>
-                                                                <input class="form-control" type="text">
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div>
-                                                                <textarea class="form-control" rows="2"></textarea>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div>
-                                                                <input class="form-control" type="text">
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div>
-                                                                <input class="form-control" type="text">
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div>
-                                                                <input class="form-control" type="text"  value="0.00" readonly>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="text-center">
-                                                                <a href="#" class="text-danger p-2 d-inline-block" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <th scope="row">2</th>
-                                                        <td>
-                                                            <div>
-                                                                <input class="form-control" type="text">
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div>
-                                                                <textarea class="form-control" rows="2"></textarea>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div>
-                                                                <input class="form-control" type="text">
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div>
-                                                                <input class="form-control" type="text">
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div>
-                                                                <input class="form-control" type="text"  value="0.00" readonly>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="text-center">
-                                                                <a href="#" class="text-danger p-2 d-inline-block" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <div class="row justify-content-end">
-                                                <div class="col-xl-3 col-md-4">
-                                                    <div>
-                                                        <div>
-                                                            <h5 class="font-size-14 py-2">Sub Total : <span class="float-end fw-normal text-body">0.00</span></h5>
-                                                        </div>
-                                                        <div>
-                                                            <h5 class="font-size-14 py-2">Discount  : <span class="float-end fw-normal text-body"> - 0.00</span></h5>
-                                                        </div>
-                                                        <div>
-                                                            <h5 class="font-size-14 py-2">Shipping Charge  : <span class="float-end fw-normal text-body"> 0.00</span></h5>
-                                                        </div>
-                                                        <div>
-                                                            <h5 class="font-size-14 py-2">Tax  : <span class="float-end fw-normal text-body"> 0.00</span></h5>
-                                                        </div>
-                                                        <div>
-                                                            <h5 class="font-size-14 py-2">Total  : <span class="float-end"> 0.00</span></h5>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- wizard-tab -->
-
+                                    <!-- Button Group -->
                                     <div class="d-flex align-items-start gap-3 mt-4">
-                                        <button type="button" class="btn btn-primary w-sm" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
-                                        <button type="button" class="btn btn-primary w-sm ms-auto" id="nextBtn" onclick="nextPrev(1)">Next</button>
+                                        <button type="button" class="btn btn-primary w-sm" id="prevBtn">Previous</button>
+                                        <button type="button" class="btn btn-primary w-sm ms-auto" id="nextBtn">Next</button>
+                                        <button type="submit" class="btn btn-primary w-sm ms-auto d-none" id="addBtn">Add</button>
                                     </div>
+                                    <!-- /Button Group -->
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
+
         </div> <!-- container-fluid -->
     </div>
+
+
 @endsection
 @section('script')
     <!-- flatpickr js -->

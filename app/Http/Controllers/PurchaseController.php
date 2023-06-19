@@ -11,7 +11,7 @@ class PurchaseController extends Controller
 {
     public function index()
     {
-        $purchases = Purchase::all();
+        $purchases = Purchase::paginate(10);
 
         $products  = Product::all();
 
@@ -65,5 +65,18 @@ class PurchaseController extends Controller
         return redirect()
             ->route('purchases')
             ->with('success', ' deleted successfully.');
+    }
+
+    public function multiDelete(Request $request)
+    {
+        $selectedExpenses = $request->id;
+
+        if ($selectedExpenses) {
+            Purchase::whereIn('id', $selectedExpenses)->delete();
+
+            return redirect()->route('expenses')->with('success', 'Selected expenses have been deleted successfully.');
+        }
+
+        return redirect()->route('expenses')->with('error', 'No expenses selected or an error occurred.');
     }
 }

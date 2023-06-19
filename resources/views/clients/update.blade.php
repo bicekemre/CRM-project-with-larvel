@@ -1,4 +1,8 @@
 @extends('layout.main')
+@section('page-name', $type . '-update')
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="/{{ $type }}">{{ $type }}</a></li>
+@endsection
 @section('content')
     @if ($message = Session::get('success'))
         <div class="alert alert-success">

@@ -9,14 +9,34 @@ use App\Models\Role;
 use App\Models\Source;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ClientController extends Controller
 {
+
+
     public function index ()
     {
-        $clients  =  CLient::where(['type' => 'client'])->orderBy('id', 'desc')->get();
+        $clients  =  CLient::where(['type' => 'client'])->orderBy('id', 'desc')->paginate(10);
 
-        return view('clients.index', compact('clients'));
+        $sources = Source::all();
+
+
+        foreach ($sources as $source) {
+            $sourcesNames[] = $source->name;
+        }
+
+        return view('clients.index', compact('clients', 'sources', 'sourcesNames'));
+    }
+
+    public function getSourceCounts()
+    {
+        $sourceCounts = Client::select('id_source', DB::raw('count(*) as client_count'))
+            ->groupBy('id_source')
+            ->get();
+
+
+        return response()->json(['data' => $sourceCounts]);
     }
 
     public function create ($type)
@@ -101,7 +121,7 @@ class ClientController extends Controller
 
     public function leads ()
     {
-        $leads = Client::where(['type' => 'lead'])->get();
+        $leads = Client::where(['type' => 'lead'])->paginate(10);
 
 
         return view('clients.leads',compact('leads'));
@@ -125,14 +145,23 @@ class ClientController extends Controller
         return view('clients.profile' , compact('client', 'revenues'));
     }
 
-    public function delete($id)
+    public function delete(Request $request, $id = null)
     {
-        $client = Client::find($id);
 
-        $client->delete();
+        $selected = [];
 
-        return redirect()
-            ->route('clients.index')
-            ->with('success', 'Client deleted successfully.');
+        if ($id) {
+            $selected[] = $id;
+        } else {
+            $selected = $request->id;
+        }
+
+        if ($selected) {
+            Client::whereIn('id', $selected)->delete();
+
+            return redirect()->route('clients')->with('success', 'Selected items have been deleted successfully.');
+        }
+
+        return redirect()->route('clients')->with('error', 'No items selected or an error occurred.');
     }
 }

@@ -39,6 +39,8 @@
                                 </a>
                             </li>
 
+
+
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle arrow-none " href="/clients" id="topnav-clients" role="button"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -50,10 +52,11 @@
                                     <a href="/leads" class="dropdown-item" data-key="t-calendar">Leads</a>
                                 </div>
                             </li>
+                            @if(auth()->user()->hasRole('god'))
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle arrow-none " href="/services" id="topnav-clients" role="button"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="bx bxs-user-badge icon"></i>
+                                    <i class="bx bxs-server icon"></i>
                                     <span data-key="t-elements">Services</span> <div class="arrow-down"></div>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="topnav-pages">
@@ -64,7 +67,22 @@
                                     @endisset
                                 </div>
                             </li>
-
+                            @elseif(auth()->user()->hasRole('admin'))
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle arrow-none " href="" id="topnav-clients" role="button"
+                                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="bx bxs-server icon"></i>
+                                        <span data-key="t-elements">Services</span> <div class="arrow-down"></div>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="topnav-pages">
+                                        @isset(auth()->user()->services)
+                                            @foreach(auth()->user()->services as $service)
+                                                <a href="/services/{{ $service->id }}" class="dropdown-item" data-key="t-products">{{ $service->name }}</a>
+                                            @endforeach
+                                        @endisset
+                                    </div>
+                                </li>
+                            @endif
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle arrow-none" href="/accounting" id="topnav-accounting" role="button">
                                     <i class="bx bx-calculator icon"></i>
@@ -101,10 +119,10 @@
                                 </div>
                             </li>
 
-                            <li class="nav-item dropdown">
+                            <li class="nav-item ">
                                 <a class="nav-link dropdown-toggle arrow-none" href="/calendar" id="topnav-components" role="button">
                                     <i class="bx bx-calendar icon"></i>
-                                    <span data-key="t-components">Calendar</span> <div class="arrow-down"></div>
+                                    <span data-key="t-components">Calendar</span>
                                 </a>
                             </li>
                         </ul>
@@ -227,28 +245,51 @@
                 </div>
             </div>
 
+
+            @if(auth()->user()->hasRole('god'))
             <div class="dropdown d-inline-block">
-                <button type="button" class="btn header-item noti-icon right-bar-toggle" id="right-bar-toggle">
+                <button class="btn header-item noti-icon" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                     <i class="bx bx-cog icon-sm"></i>
                 </button>
             </div>
 
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                <div class="offcanvas-header">
+                    <h5 id="offcanvasRightLabel">God Mode</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="row mb-4">
+                        <a href="/users" type="button" class="btn btn-primary">Users</a>
+                    </div>
+                    <div class="row mb-4">
+                        <a href="/roles" type="button" class="btn btn-primary">Roles</a>
+                    </div>
+                    <div class="row mb-4">
+                        <a href="/permissions" type="button" class="btn btn-primary">Permissions</a>
+                    </div>
+                    <div class="row mb-4">
+                        <a href="/services" type="button" class="btn btn-primary">Services</a>
+                    </div>
+                </div>
+            </div>
+            @endif
+
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item user text-start d-flex align-items-center" id="page-header-user-dropdown"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="rounded-circle header-profile-user" src="assets/images/users/avatar-3.jpg"
+                    <img class="rounded-circle header-profile-user" src="{{ asset('assets/images/users/avatar-3.jpg') }}"
                          alt="Header Avatar">
                     <span class="ms-2 d-none d-xl-inline-block user-item-desc">
-                                <span class="user-name">Marie N. <i class="mdi mdi-chevron-down"></i></span>
+                                <span class="user-name">{{ auth()->user()->name }} <i class="mdi mdi-chevron-down"></i></span>
                             </span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end pt-0">
-                    <h6 class="dropdown-header">Welcome Marie N!</h6>
-                    <a class="dropdown-item" href="/profile"><i class="mdi mdi-account-circle text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Profile</span></a>
-                    <a class="dropdown-item" href="/chat"><i class="mdi mdi-message-text-outline text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Messages</span></a>
+                    <h6 class="dropdown-header">Welcome {{ auth()->user()->name }}!</h6>
+                    <a class="dropdown-item" href="/users/profile/"><i class="mdi mdi-account-circle text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Profile</span></a>
                     <a class="dropdown-item" href="/taskboard"><i class="mdi mdi-calendar-check-outline text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Taskboard</span></a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item d-flex align-items-center" href="/profile/settings"><i class="mdi mdi-cog-outline text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Settings</span><span class="badge badge-soft-success ms-auto">New</span></a>
+                    <a class="dropdown-item d-flex align-items-center" href="/users/settings"><i class="mdi mdi-cog-outline text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Settings</span><span class="badge badge-soft-success ms-auto">New</span></a>
                     <a class="dropdown-item" href="/lockscreen"><i class="mdi mdi-lock text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Lock screen</span></a>
                     <a class="dropdown-item" href="/logout"><i class="mdi mdi-logout text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Logout</span></a>
                 </div>
@@ -262,12 +303,12 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-flex align-items-center justify-content-between">
-                        <h4 class="mb-0">Welcome !</h4>
+                        <h4 class="mb-0">@yield('page-name')</h4>
 
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboard</a></li>
-                                <li class="breadcrumb-item active">Welcome !</li>
+                                @yield('breadcrumb')
+                                <li class="breadcrumb-item active">@yield('page-name')</li>
                             </ol>
                         </div>
 
@@ -284,43 +325,43 @@
                             <div class="row row-cols-xxl-6 row-cols-md-3 row-cols-1 g-0">
                                 <div class="col">
                                     <div class="mt-md-0 py-3 px-4 mx-2">
-                                        <p class="text-white-50 mb-2 text-truncate">Campaign Sent </p>
-                                        <h3 class="text-white mb-0">197</h3>
+                                        <p class="text-white-50 mb-2 text-truncate">Income </p>
+                                        <h3 class="text-white mb-0">${{ $profits['totalRevenue'] ?? 0}}</h3>
                                     </div>
                                 </div><!-- end col -->
 
                                 <div class="col">
                                     <div class="mt-3 mt-md-0 py-3 px-4 mx-2">
-                                        <p class="text-white-50 mb-2 text-truncate">Annual Profit</p>
-                                        <h3 class="text-white mb-0">$4655.4k</h3>
+                                        <p class="text-white-50 mb-2 text-truncate">Expense</p>
+                                        <h3 class="text-white mb-0">${{ $profits['totalExpense'] ?? 0 }}</h3>
                                     </div>
                                 </div><!-- end col -->
 
                                 <div class="col">
                                     <div class="mt-3 mt-md-0 py-3 px-4 mx-2">
-                                        <p class="text-white-50 mb-2 text-truncate">Lead Coversation</p>
-                                        <h3 class="text-white mb-0">32.89%</h3>
+                                        <p class="text-white-50 mb-2 text-truncate">Profit</p>
+                                        <h3 class="text-white mb-0">{{ number_format($profits['profitPercentage'], 2) ?? 0 }}%</h3>
                                     </div>
                                 </div><!-- end col -->
 
                                 <div class="col">
                                     <div class="mt-3 mt-md-0 py-3 px-4 mx-2">
-                                        <p class="text-white-50 mb-2 text-truncate">Sales Forecast</p>
-                                        <h3 class="text-white mb-0">75.35%</h3>
+                                        <p class="text-white-50 mb-2 text-truncate">Grand Total</p>
+                                        <h3 class="text-white mb-0">{{ $profits['profit'] ?? 0 }}</h3>
                                     </div>
                                 </div><!-- end col -->
 
                                 <div class="col">
                                     <div class="mt-3 mt-lg-0 py-3 px-4 mx-2">
-                                        <p class="text-white-50 mb-2 text-truncate">Daily Average Income</p>
-                                        <h3 class="text-white mb-0">$1,596.5</h3>
+                                        <p class="text-white-50 mb-2 text-truncate">Refunds</p>
+                                        <h3 class="text-white mb-0">{{ $profits['totalRefunds'] ?? 0 }}</h3>
                                     </div>
                                 </div><!-- end col -->
 
                                 <div class="col">
                                     <div class="mt-3 mt-lg-0 py-3 px-4 mx-2">
-                                        <p class="text-white-50 mb-2 text-truncate">Annual Deals</p>
-                                        <h3 class="text-white mb-0">2,659</h3>
+                                        <p class="text-white-50 mb-2 text-truncate">Clients Amount</p>
+                                        <h3 class="text-white mb-0">{{ count($clients) }}</h3>
                                     </div>
                                 </div><!-- end col -->
 
@@ -342,3 +383,127 @@
     <!-- end dash troggle-icon -->
 
 </header>
+
+<!-- Right Sidebar -->
+<div class="right-bar" id="">
+    <div data-simplebar class="h-100">
+        <div class="rightbar-title d-flex align-items-center p-3">
+
+            <h5 class="m-0 me-2">Theme Customizer</h5>
+
+            <a href="javascript:void(0);" class="right-bar-toggle-close ms-auto">
+                <i class="mdi mdi-close noti-icon"></i>
+            </a>
+        </div>
+
+        <!-- Settings -->
+        <hr class="m-0" />
+
+        <div class="p-4">
+            <h6 class="mb-3">Layout</h6>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="layout"
+                       id="layout-vertical" value="vertical">
+                <label class="form-check-label" for="layout-vertical">Vertical</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="layout"
+                       id="layout-horizontal" value="horizontal">
+                <label class="form-check-label" for="layout-horizontal">Horizontal</label>
+            </div>
+
+            <h6 class="mt-4 mb-3">Layout Mode</h6>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="layout-mode"
+                       id="layout-mode-light" value="light">
+                <label class="form-check-label" for="layout-mode-light">Light</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="layout-mode"
+                       id="layout-mode-dark" value="dark">
+                <label class="form-check-label" for="layout-mode-dark">Dark</label>
+            </div>
+
+            <h6 class="mt-4 mb-3">Layout Width</h6>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="layout-width"
+                       id="layout-width-fluid" value="fluid" onchange="document.body.setAttribute('data-layout-size', 'fluid')">
+                <label class="form-check-label" for="layout-width-fluid">Fluid</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="layout-width"
+                       id="layout-width-boxed" value="boxed" onchange="document.body.setAttribute('data-layout-size', 'boxed')">
+                <label class="form-check-label" for="layout-width-boxed">Boxed</label>
+            </div>
+
+            <h6 class="mt-4 mb-3">Topbar Color</h6>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="topbar-color"
+                       id="topbar-color-light" value="light" onchange="document.body.setAttribute('data-topbar', 'light')">
+                <label class="form-check-label" for="topbar-color-light">Light</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="topbar-color"
+                       id="topbar-color-dark" value="dark" onchange="document.body.setAttribute('data-topbar', 'dark')">
+                <label class="form-check-label" for="topbar-color-dark">Dark</label>
+            </div>
+
+            <div id="sidebar-setting">
+                <h6 class="mt-4 mb-3 sidebar-setting">Sidebar Size</h6>
+
+                <div class="form-check sidebar-setting mt-1">
+                    <input class="form-check-input" type="radio" name="sidebar-size"
+                           id="sidebar-size-default" value="default" onchange="document.body.setAttribute('data-sidebar-size', 'lg')">
+                    <label class="form-check-label" for="sidebar-size-default">Default</label>
+                </div>
+                <div class="form-check sidebar-setting mt-1">
+                    <input class="form-check-input" type="radio" name="sidebar-size"
+                           id="sidebar-size-compact" value="compact" onchange="document.body.setAttribute('data-sidebar-size', 'md')">
+                    <label class="form-check-label" for="sidebar-size-compact">Compact</label>
+                </div>
+                <div class="form-check sidebar-setting mt-1">
+                    <input class="form-check-input" type="radio" name="sidebar-size"
+                           id="sidebar-size-small" value="small" onchange="document.body.setAttribute('data-sidebar-size', 'sm')">
+                    <label class="form-check-label" for="sidebar-size-small">Small (Icon View)</label>
+                </div>
+
+                <h6 class="mt-4 mb-3 sidebar-setting">Sidebar Color</h6>
+
+                <div class="form-check sidebar-setting mt-1">
+                    <input class="form-check-input" type="radio" name="sidebar-color"
+                           id="sidebar-color-light" value="light" onchange="document.body.setAttribute('data-sidebar', 'light')">
+                    <label class="form-check-label" for="sidebar-color-light">Light</label>
+                </div>
+                <div class="form-check sidebar-setting mt-1">
+                    <input class="form-check-input" type="radio" name="sidebar-color"
+                           id="sidebar-color-dark" value="dark" onchange="document.body.setAttribute('data-sidebar', 'dark')">
+                    <label class="form-check-label" for="sidebar-color-dark">Dark</label>
+                </div>
+                <div class="form-check sidebar-setting mt-1">
+                    <input class="form-check-input" type="radio" name="sidebar-color"
+                           id="sidebar-color-brand" value="brand" onchange="document.body.setAttribute('data-sidebar', 'brand')">
+                    <label class="form-check-label" for="sidebar-color-brand">Brand</label>
+                </div>
+            </div>
+
+            <h6 class="mt-4 mb-3">Direction</h6>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="layout-direction"
+                       id="layout-direction-ltr" value="ltr">
+                <label class="form-check-label" for="layout-direction-ltr">LTR</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="layout-direction"
+                       id="layout-direction-rtl" value="rtl">
+                <label class="form-check-label" for="layout-direction-rtl">RTL</label>
+            </div>
+
+        </div>
+
+    </div> <!-- end slimscroll-menu-->
+</div>
+<!-- /Right-bar -->

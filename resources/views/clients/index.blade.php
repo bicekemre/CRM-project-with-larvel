@@ -1,4 +1,5 @@
 @extends('layout.main')
+@section('page-name', 'Clients')
 @section('content')
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
@@ -12,7 +13,7 @@
                 <div class="col-lg-4">
                     <div class="card">
                         <div class="card-header justify-content-between d-flex align-items-center">
-                            <h4 class="card-title">Simple Pie Chart</h4>
+                            <h4 class="card-title">Day</h4>
                         </div><!-- end card header -->
                         <div class="card-body">
                             <div id="simple_pie_chart_day" data-colors='["--bs-primary", "--bs-success", "--bs-warning", "--bs-danger", "--bs-info"]' data-label='["instagram", "facebook"]' class="apex-charts" dir="ltr"></div>
@@ -22,7 +23,7 @@
                 <div class="col-lg-4">
                     <div class="card">
                         <div class="card-header justify-content-between d-flex align-items-center">
-                            <h4 class="card-title">Simple Pie Chart</h4>
+                            <h4 class="card-title">Week</h4>
                         </div><!-- end card header -->
                         <div class="card-body">
                             <div id="simple_pie_chart_week" data-colors='["--bs-primary", "--bs-success", "--bs-warning", "--bs-danger", "--bs-info"]' class="apex-charts" dir="ltr"></div>
@@ -32,7 +33,7 @@
                 <div class="col-lg-4">
                     <div class="card">
                         <div class="card-header justify-content-between d-flex align-items-center">
-                            <h4 class="card-title">Simple Pie Chart</h4>
+                            <h4 class="card-title">Month</h4>
                         </div><!-- end card header -->
                         <div class="card-body">
                             <div id="simple_pie_chart_month" data-colors='["--bs-primary", "--bs-success", "--bs-warning", "--bs-danger", "--bs-info"]' class="apex-charts" dir="ltr"></div>
@@ -67,6 +68,9 @@
                             </div>
 
                             <div class="table-responsive">
+                                <form action="{{ route('clients.delete') }}" method="POST">
+                                @method('POST')
+                                @csrf
                                 <table class="table align-middle table-nowrap">
                                     <thead>
                                     <tr>
@@ -130,24 +134,38 @@
                                     @endisset
                                     </tbody>
                                 </table>
+                                <div class="row mb-2">
+                                        <div class="col-sm-4">
+                                            <button type="submit" class="btn btn-danger mb-4" id="deleteSelectedExpenses">
+                                                <i class="mdi mdi-delete me-1"></i> Delete Selected
+                                            </button>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <ul class="pagination pagination-rounded justify-content-end mb-2">
+                                                <li class="page-item {{ $clients->currentPage() == 1 ? 'disabled' : '' }}">
+                                                    <a class="page-link" href="{{ $clients->previousPageUrl() }}"
+                                                       aria-label="Previous">
+                                                        <i class="mdi mdi-chevron-left"></i>
+                                                    </a>
+                                                </li>
+                                                @foreach ($clients->getUrlRange(1, $clients->lastPage()) as $page => $url)
+                                                    <li class="page-item {{ $clients->currentPage() == $page ? 'active' : '' }}">
+                                                        <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                                                    </li>
+                                                @endforeach
+                                                <li
+                                                        class="page-item {{ $clients->currentPage() == $clients->lastPage() ? 'disabled' : '' }}">
+                                                    <a class="page-link" href="{{ $clients->nextPageUrl() }}"
+                                                       aria-label="Next">
+                                                        <i class="mdi mdi-chevron-right"></i>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                            <ul class="pagination pagination-rounded justify-content-end mb-2">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="javascript: void(0);" aria-label="Previous">
-                                        <i class="mdi mdi-chevron-left"></i>
-                                    </a>
-                                </li>
-                                <li class="page-item active"><a class="page-link" href="javascript: void(0);">1</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(1);">2</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">3</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">4</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript: void(0);">5</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="javascript: void(0);" aria-label="Next">
-                                        <i class="mdi mdi-chevron-right"></i>
-                                    </a>
-                                </li>
-                            </ul>
+
                         </div>
                     </div>
                 </div>
@@ -161,4 +179,8 @@
     @section('script')
         <!-- piecharts init -->
         <script src="{{ asset('assets/js/pages/apexcharts-pie.init.js') }}"></script>
+        <script src="{{ 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js' }}"></script>
+
+        <script src="{{ asset('assets/js/pages/clients.js') }}"></script>
+
     @endsection
